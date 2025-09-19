@@ -94,45 +94,71 @@ in
 
     # Boot security
     boot = {
-      # Kernel security parameters
+      # Kernel security parameters - merged with additional hardening below
       kernel.sysctl = {
         # Network security
         "net.ipv4.conf.all.accept_redirects" = 0;
         "net.ipv4.conf.default.accept_redirects" = 0;
         "net.ipv6.conf.all.accept_redirects" = 0;
         "net.ipv6.conf.default.accept_redirects" = 0;
-        
-        "net.ipv4.conf.all.accept_source_route" = 0;
-        "net.ipv4.conf.default.accept_source_route" = 0;
-        "net.ipv6.conf.all.accept_source_route" = 0;
-        "net.ipv6.conf.default.accept_source_route" = 0;
-        
+
         "net.ipv4.conf.all.send_redirects" = 0;
         "net.ipv4.conf.default.send_redirects" = 0;
-        
-        "net.ipv4.conf.all.log_martians" = 1;
-        "net.ipv4.conf.default.log_martians" = 1;
-        
+
         # Enable SYN flood protection
         "net.ipv4.tcp_syncookies" = 1;
-        
-        # Ignore ICMP redirects
-        "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
-        
+
         # IP forwarding: leave default (0). Docker profile may override to 1.
-        
+
         # Kernel hardening
-        "kernel.kptr_restrict" = 2;
-        "kernel.dmesg_restrict" = 1;
         "kernel.printk" = "3 3 3 3";
-        "kernel.unprivileged_bpf_disabled" = 1;
         "kernel.yama.ptrace_scope" = 1;
-        
-        # Disable magic SysRq key
-        "kernel.sysrq" = 0;
-        
-        # Hide kernel pointers
+
+
+        # Additional hardening when enabled
+        # Disable unprivileged user namespaces (breaks some sandboxing but more secure)
+        "kernel.unprivileged_userns_clone" = 0;
+
+        # Increase ASLR effectiveness
+        "kernel.randomize_va_space" = 2;
+
+        # Protect against time-wait assassination
+        "net.ipv4.tcp_rfc1337" = 1;
+
+        # Protection against SYN flood attacks
+        "net.ipv4.tcp_max_syn_backlog" = 4096;
+        "net.ipv4.tcp_synack_retries" = 3;
+
+        # Disable source packet routing
+        "net.ipv4.conf.all.accept_source_route" = 0;
+        "net.ipv6.conf.all.accept_source_route" = 0;
+
+        # Log Martians (packets with impossible addresses)
+        "net.ipv4.conf.all.log_martians" = 1;
+        "net.ipv4.conf.default.log_martians" = 1;
+
+        # Ignore bogus ICMP errors
+        "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+        "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+
+        # Restrict core dumps
+        "fs.suid_dumpable" = 0;
+
+        # Hide kernel symbols in /proc/kallsyms
+        "kernel.kptr_restrict" = 2;
+
+        # Restrict dmesg to root
+        "kernel.dmesg_restrict" = 1;
+
+        # Disable kexec (prevent replacing kernel)
         "kernel.kexec_load_disabled" = 1;
+
+        # BPF hardening
+        "kernel.unprivileged_bpf_disabled" = 1;
+        "net.core.bpf_jit_harden" = 2;
+
+        # Restrict userfaultfd to CAP_SYS_PTRACE
+        "vm.unprivileged_userfaultfd" = 0;
       };
       
       # Blacklist unnecessary kernel modules
@@ -220,25 +246,54 @@ in
       ];
     };
 
+    # Fail2ban for brute force protection
+    services.fail2ban = {
+      enable = true;
+      maxretry = 3;
+      bantime = "1h";
+      bantime-increment.enable = true;
+
+      jails = {
+        # SSH jail with custom configuration
+        sshd-custom = ''
+          enabled = true
+          port = 22
+          filter = sshd
+          maxretry = 3
+          findtime = 600
+          bantime = 3600
+          backend = systemd
+        '';
+
+        # Protect systemd auth
+        systemd-auth = ''
+          enabled = true
+          filter = systemd[journalmatch="_SYSTEMD_UNIT=systemd-logind.service"]
+          maxretry = 5
+          backend = systemd
+        '';
+      };
+    };
+
     # Additional packages for security
     environment.systemPackages = with pkgs; [
       # Security tools
-      fail2ban
       aide  # File integrity checker
       chkrootkit
       lynis  # Security auditing
       # clamav is heavy; enable via dedicated profile when needed
-      
+
       # Network security
       iptables
       nftables
-      
+
       # Password management
       pwgen
       pass
     ];
 
-    # Optional USB control via usbguard
-    services.usbguard.enable = lib.mkDefault true;
+    # Optional USB control via usbguard - disabled by default as it can be problematic
+    # Enable per-host if needed
+    services.usbguard.enable = lib.mkDefault false;
   };
 }

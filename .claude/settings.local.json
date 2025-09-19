@@ -10,7 +10,9 @@
       "Bash(nix flake metadata:*)",
       "Bash(nix flake show:*)",
       "Bash(git ls-remote:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(journalctl:*)",
+      "Bash(systemctl:*)"
     ],
     "deny": [],
     "ask": []

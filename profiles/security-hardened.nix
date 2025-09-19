@@ -14,8 +14,9 @@
     };
   };
 
-  # USB device policy
-  services.usbguard.enable = lib.mkDefault true;
+  # USB device policy - disabled by default as it can cause issues
+  # Enable per-host if needed with proper rules
+  services.usbguard.enable = lib.mkDefault false;
 
   # Auditing
   security.auditd.enable = lib.mkDefault true;

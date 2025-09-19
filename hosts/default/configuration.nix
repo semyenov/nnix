@@ -8,6 +8,7 @@
     ../../profiles/nvidia.nix
     ../../profiles/docker.nix
     ../../profiles/security-hardened.nix
+    ../../profiles/system-optimizations.nix
   ];
 
   # Boot loader configuration
@@ -51,8 +52,15 @@
   # Printing/Bluetooth handled in desktop profile
 
   # User accounts
+  users.groups.semyenov = {
+    gid = 1000;
+  };
+
   users.users.semyenov = {
     isNormalUser = true;
+    uid = 1000;
+    group = "semyenov";
+    home = "/home/semyenov";
     description = "Alexander Semyenov";
     extraGroups = [
       "wheel"         # Enable 'sudo'

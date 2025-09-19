@@ -61,7 +61,26 @@
     alacritty
     kitty
     ghostty
+    gnome-themes-extra  # Fix missing GTK4 theme files
+    gnome-tweaks
+    gnomeExtensions.appindicator
+    gnomeExtensions.dash-to-dock
   ];
+
+  # Fix gnome-keyring PAM configuration
+  security.pam.services = {
+    gdm.enableGnomeKeyring = true;
+    gdm-password.enableGnomeKeyring = true;
+  };
+
+  # GNOME specific services
+  services.gnome = {
+    gnome-keyring.enable = true;
+    gnome-settings-daemon.enable = true;
+  };
+
+  # Disable USBGuard if not needed (causing errors)
+  services.usbguard.enable = lib.mkForce false;
 }
 
 
