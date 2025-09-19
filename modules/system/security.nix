@@ -14,13 +14,7 @@ in
       default = true;
       description = "Enable and configure the firewall";
     };
-    
-    enableFaillock = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable account lockout after failed login attempts";
-    };
-    
+
     enableAppArmor = mkOption {
       type = types.bool;
       default = false;
@@ -38,14 +32,12 @@ in
     # Firewall configuration
     networking.firewall = mkIf cfg.enableFirewall {
       enable = true;
-      
-      # Log dropped packets
+      # Log dropped/refused packets
       logReversePathDrops = true;
       logRefusedConnections = true;
       logRefusedUnicastsOnly = true;
-      
-      # Ping configuration
-      allowPing = false;
+      # Allow ICMP for diagnostics unless policy forbids
+      allowPing = true;
       
       # Example port configurations
       # allowedTCPPorts = [ 22 80 443 ];
@@ -82,24 +74,6 @@ in
       
       # PAM configuration
       pam = {
-        # Account lockout after failed attempts
-        services = mkIf cfg.enableFaillock {
-          sshd.faillock.enable = true;
-          login.faillock.enable = true;
-          
-          # Configure faillock
-          sudo.faillock = {
-            enable = true;
-            deny = 5;  # Lock after 5 failed attempts
-            unlockTime = 600;  # Unlock after 10 minutes
-          };
-        };
-        
-        # USB protection
-        usb-protection = {
-          enable = true;
-        };
-        
         # Login settings
         loginLimits = [
           {
@@ -145,9 +119,7 @@ in
         # Ignore ICMP redirects
         "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
         
-        # Disable IP forwarding
-        "net.ipv4.ip_forward" = 0;
-        "net.ipv6.conf.all.forwarding" = 0;
+        # IP forwarding: leave default (0). Docker profile may override to 1.
         
         # Kernel hardening
         "kernel.kptr_restrict" = 2;
@@ -201,8 +173,7 @@ in
         ClientAliveCountMax = 2;
         LoginGraceTime = 60;
         
-        # Limit users
-        AllowUsers = [ "user" ];  # Adjust as needed
+        # Users can be constrained per-host via profiles or host config
         
         # Cryptography
         Ciphers = [
@@ -256,7 +227,7 @@ in
       aide  # File integrity checker
       chkrootkit
       lynis  # Security auditing
-      clamav  # Antivirus
+      # clamav is heavy; enable via dedicated profile when needed
       
       # Network security
       iptables
@@ -266,5 +237,8 @@ in
       pwgen
       pass
     ];
+
+    # Optional USB control via usbguard
+    services.usbguard.enable = lib.mkDefault true;
   };
 }

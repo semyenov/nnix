@@ -2,8 +2,12 @@
 
 {
   imports = [
-    # Include hardware scan results
     ./hardware-configuration.nix
+    ../../profiles/base.nix
+    ../../profiles/desktop-gnome.nix
+    ../../profiles/nvidia.nix
+    ../../profiles/docker.nix
+    ../../profiles/security-hardened.nix
   ];
 
   # Boot loader configuration
@@ -14,67 +18,15 @@
     timeout = 3;
   };
 
-  # Kernel parameters and modules
-  boot.kernelParams = [ "quiet" "splash" "nvidia-drm.modeset=1" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
-
-  # Hardware configuration
-  hardware.enableRedistributableFirmware = true;
-
-  # NVIDIA Configuration
-  hardware.nvidia = {
-    # Enable modesetting for better Wayland support
-    modesetting.enable = true;
-
-    # Enable the nvidia-settings application
-    nvidiaSettings = true;
-
-    # Use the open source kernel module (for Turing and newer)
-    open = false;  # RTX 4060 works better with proprietary drivers
-
-    # Enable power management (can cause sleep/suspend issues)
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
-
-    # Use the latest production driver
-    package = config.boot.kernelPackages.nvidiaPackages.production;
-  };
-
-  # Enable OpenGL
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-
-  # NVIDIA PRIME configuration for hybrid graphics
-  hardware.nvidia.prime = {
-    # Offload mode - Intel is primary, NVIDIA on demand
-    offload = {
-      enable = true;
-      enableOffloadCmd = true;
-    };
-
-    # Bus IDs - detected from lspci output
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-  };
+  # Nvidia specifics moved into profiles/nvidia.nix
 
   # Networking
   networking = {
-    hostName = "nixos"; # Define your hostname
-    networkmanager.enable = true;
-    
-    # Firewall configuration
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [ ];
-      allowedUDPPorts = [ ];
-    };
+    hostName = "nixos";
+    firewall.enable = true;
   };
 
-  # Time zone and locale
-  time.timeZone = "UTC"; # Change to your timezone
+  time.timeZone = "UTC";
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -90,55 +42,13 @@
     };
   };
 
-  # Console configuration
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true; # Use X11 keyboard layout for console
-  };
+  console = { font = "Lat2-Terminus16"; useXkbConfig = true; };
 
-  # Enable sound with PipeWire
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
+  # Audio/desktop handled in desktop profile
 
-  # X11/Wayland configuration
-  services.xserver = {
-    enable = true;
+  # GUI handled in desktop profile
 
-    # Enable NVIDIA driver
-    videoDrivers = [ "nvidia" ];
-
-    # Display manager
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
-
-    # Desktop environment (GNOME as default, can be changed)
-    desktopManager.gnome.enable = true;
-    
-    # Keyboard layout
-    xkb = {
-      layout = "us";
-      variant = "";
-      options = "caps:escape"; # Map Caps Lock to Escape
-    };
-  };
-
-  # Enable CUPS for printing
-  services.printing.enable = true;
-
-  # Enable Bluetooth
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
+  # Printing/Bluetooth handled in desktop profile
 
   # User accounts
   users.users.semyenov = {
@@ -156,141 +66,18 @@
     # initialPassword = "changeme"; # Remember to change this!
   };
 
-  # Allow unfree packages (required for NVIDIA drivers)
-  nixpkgs.config.allowUnfree = true;
+  # Unfree handled in base profile
 
-  # Fonts configuration
-  fonts = {
-    packages = with pkgs; [
-      (nerd-fonts.recursive-mono)
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      liberation_ttf
-    ];
-
-    fontconfig = {
-      enable = true;
-      defaultFonts = {
-        serif = [ "Noto Serif" "Liberation Serif" ];
-        sansSerif = [ "Noto Sans" "Liberation Sans" ];
-        monospace = [ "RecMonoLinear Nerd Font" "Noto Sans Mono" ];
-        emoji = [ "Noto Color Emoji" ];
-      };
-    };
-  };
+  # Fonts handled in desktop profile
 
   # Add overlays
-  nixpkgs.overlays = [
-    # Custom packages overlay
-    (final: prev: {
-      cursor-appimage = final.callPackage ../../packages/cursor-appimage.nix { };
-      yandex-music = final.callPackage ../../packages/yandex-music.nix { };
-    })
-
-    # Unstable packages overlay
-    (final: prev: {
-      unstable = import inputs.nixpkgs-unstable {
-        system = prev.system;
-        config.allowUnfree = true;
-      };
-    })
-  ];
+  # Overlays set at flake level or base profile
 
   # System packages
-  environment.systemPackages = with pkgs; ([
-    # Core utilities
-    vim
-    neovim
-    git
-    wget
-    curl
-    htop
-    btop
-    tree
-    unzip
-    zip
-    ripgrep
-    fd
-    bat
-    eza
-    zoxide
-    fzf
-    
-    # Modern CLI replacements
-    sd           # Modern sed replacement
-    dust         # Modern du - disk usage with tree view
-    duf          # Modern df - disk usage with better UI
-    procs        # Modern ps replacement
-    lsd          # Modern ls with icons and git integration
-    choose       # Modern cut replacement
-    tokei        # Fast code statistics
-    bottom       # Another system monitor (lighter than btop)
-    gping        # Ping with graph visualization
-    dog          # Modern dig (DNS lookup)
-    
-    # Developer productivity tools
-    gitui        # Blazing fast git TUI
-    delta        # Beautiful git diffs
-    xh           # Faster HTTPie alternative  
-    curlie       # curl with HTTPie-like interface
-    grex         # Generate regex from examples
-    hyperfine    # Command benchmarking tool
-    just         # Modern make alternative
-    watchexec    # File watcher and command runner
-    
-    # System monitoring
-    bandwhich    # Network usage by process
-    
-    # Data processing
-    jq
-    yq
-    miller       # CSV/JSON/TSV swiss-army knife
-    gron         # Make JSON greppable
-    hexyl        # Modern hex viewer
-    
-    # Development tools
-    gcc
-    gnumake
-    python3
-    nodejs
-    
-    # System tools
-    pciutils
-    usbutils
-    lshw
-    dmidecode
-    
-    # Network tools
-    nmap
-    traceroute
-    dig
-    netcat
-    
-    # File management
-    ranger
-    ncdu
-    
-    # Terminal emulators
-    alacritty
-    kitty
-    ghostty
-    
-    # Modern shells
-    nushell      # Data-oriented shell
-    
-    # Network and development tools
-    nekoray      # Qt-based GUI proxy configuration manager
-  ] ++ [
-    unstable.claude-code  # Claude Code CLI tool (from unstable)
-  ]);
+  # Packages moved to profiles as needed
 
   # Environment variables
-  environment.variables = {
-    EDITOR = "nvim";
-    BROWSER = "brave";
-    TERMINAL = "ghostty";
-  };
+  # Environment variables moved to profiles if needed
 
   # Shell aliases
   environment.shellAliases = {
@@ -327,111 +114,16 @@
   };
 
   # Programs configuration
-  programs = {
-    bash.completion.enable = true;
-    
-    # Git configuration
-    git = {
-      enable = true;
-      config = {
-        init.defaultBranch = "main";
-      };
-    };
-    
-    # Enable GPG
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    
-    # Enable fish shell with plugins
-    fish = {
-      enable = true;
-      vendor = {
-        completions.enable = true;
-        config.enable = true;
-        functions.enable = true;
-      };
-    };
-    
-    
-    # Enable zsh
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      syntaxHighlighting.enable = true;
-      autosuggestions.enable = true;
-    };
-  };
+  # Programs moved to profiles or HM
 
   # Virtualisation
-  virtualisation = {
-    # Enable Docker
-    docker = {
-      enable = true;
-      enableOnBoot = true;
-    };
-    
-    # Enable libvirt for virtualization
-    libvirtd = {
-      enable = true;
-      qemu = {
-        package = pkgs.qemu_kvm;
-        runAsRoot = false;
-      };
-    };
-  };
+  # Virtualisation handled in profiles
 
   # Services
-  services = {
-    # Enable SSH daemon
-    openssh = {
-      enable = true;
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = false;
-      };
-    };
-    
-    # Enable Flatpak
-    flatpak.enable = true;
-    
-    
-  };
+  # Services mostly handled in profiles
 
   # Nix configuration
-  nix = {
-    package = pkgs.nixVersions.stable;
-    
-    settings = {
-      # Enable flakes
-      experimental-features = [ "nix-command" "flakes" ];
-      
-      # Optimizations
-      auto-optimise-store = true;
-      
-      # Binary caches
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-      ];
-      
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-      
-      # Allow specified users to use Nix
-      trusted-users = [ "root" "@wheel" ];
-    };
-    
-    # Garbage collection
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
-  };
+  # Nix settings moved to base profile
 
   # System state version (DO NOT CHANGE)
   # This value determines the NixOS release from which the default

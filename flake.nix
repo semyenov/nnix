@@ -52,6 +52,9 @@
             # Main system configuration
             ./hosts/default/configuration.nix
             
+            # Apply overlays from this flake
+            { nixpkgs.overlays = [ self.overlays.default self.overlays.unstable-packages ]; }
+
             # Home Manager as NixOS module
             inputs.home-manager.nixosModules.home-manager
             {
@@ -61,7 +64,7 @@
               home-manager.backupFileExtension = "backup";
 
               # User configurations
-              home-manager.users.semyenov = import ./home/default.nix;
+              home-manager.users.semyenov = import ./home/users/semyenov.nix;
             }
 
             # Custom modules
