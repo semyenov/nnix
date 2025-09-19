@@ -9,15 +9,56 @@
   # Boot loader configuration
   boot.loader = {
     systemd-boot.enable = true;
-    systemd-boot.configurationLimit = 10;
+    systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
     timeout = 3;
   };
 
   # Kernel parameters and modules
-  boot.kernelParams = [ "quiet" "splash" ];
+  boot.kernelParams = [ "quiet" "splash" "nvidia-drm.modeset=1" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
+  boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+
+  # Hardware configuration
+  hardware.enableRedistributableFirmware = true;
+
+  # NVIDIA Configuration
+  hardware.nvidia = {
+    # Enable modesetting for better Wayland support
+    modesetting.enable = true;
+
+    # Enable the nvidia-settings application
+    nvidiaSettings = true;
+
+    # Use the open source kernel module (for Turing and newer)
+    open = false;  # RTX 4060 works better with proprietary drivers
+
+    # Enable power management (can cause sleep/suspend issues)
+    powerManagement.enable = true;
+    powerManagement.finegrained = false;
+
+    # Use the latest production driver
+    package = config.boot.kernelPackages.nvidiaPackages.production;
+  };
+
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # NVIDIA PRIME configuration for hybrid graphics
+  hardware.nvidia.prime = {
+    # Offload mode - Intel is primary, NVIDIA on demand
+    offload = {
+      enable = true;
+      enableOffloadCmd = true;
+    };
+
+    # Bus IDs - detected from lspci output
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
 
   # Networking
   networking = {
@@ -56,7 +97,7 @@
   };
 
   # Enable sound with PipeWire
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -69,13 +110,16 @@
   # X11/Wayland configuration
   services.xserver = {
     enable = true;
-    
+
+    # Enable NVIDIA driver
+    videoDrivers = [ "nvidia" ];
+
     # Display manager
     displayManager.gdm = {
       enable = true;
       wayland = true;
     };
-    
+
     # Desktop environment (GNOME as default, can be changed)
     desktopManager.gnome.enable = true;
     
@@ -112,8 +156,29 @@
     # initialPassword = "changeme"; # Remember to change this!
   };
 
-  # Allow unfree packages
+  # Allow unfree packages (required for NVIDIA drivers)
   nixpkgs.config.allowUnfree = true;
+
+  # Fonts configuration
+  fonts = {
+    packages = with pkgs; [
+      (nerd-fonts.recursive-mono)
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      liberation_ttf
+    ];
+
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        serif = [ "Noto Serif" "Liberation Serif" ];
+        sansSerif = [ "Noto Sans" "Liberation Sans" ];
+        monospace = [ "RecMonoLinear Nerd Font" "Noto Sans Mono" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+    };
+  };
 
   # Add overlays
   nixpkgs.overlays = [
@@ -209,6 +274,7 @@
     # Terminal emulators
     alacritty
     kitty
+    ghostty
     
     # Modern shells
     nushell      # Data-oriented shell
@@ -223,7 +289,7 @@
   environment.variables = {
     EDITOR = "nvim";
     BROWSER = "brave";
-    TERMINAL = "alacritty";
+    TERMINAL = "ghostty";
   };
 
   # Shell aliases

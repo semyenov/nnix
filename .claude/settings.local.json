@@ -5,7 +5,8 @@
       "Bash(nix flake check:*)",
       "Bash(nix search:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(nix flake update:*)"
     ],
     "deny": [],
     "ask": []

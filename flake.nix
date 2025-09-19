@@ -2,15 +2,15 @@
   description = "A modern NixOS configuration with flake-parts";
 
   inputs = {
-    # Nixpkgs - using stable branch
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    
+    # Nixpkgs - using NixOS 25.05
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+
     # Nixpkgs unstable for bleeding edge packages
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Home Manager for user environment management
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -58,6 +58,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.backupFileExtension = "backup";
 
               # User configurations
               home-manager.users.semyenov = import ./home/default.nix;

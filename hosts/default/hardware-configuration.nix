@@ -21,8 +21,8 @@
   boot.initrd.luks.devices."luks-22440acf-b576-43cf-a0b2-d8f39626b43d".device = "/dev/disk/by-uuid/22440acf-b576-43cf-a0b2-d8f39626b43d";
 
   fileSystems."/boot" =
-    { device = "systemd-1";
-      fsType = "autofs";
+    { device = "/dev/disk/by-uuid/2FCF-38D2";
+      fsType = "vfat";
     };
 
   swapDevices = [ ];

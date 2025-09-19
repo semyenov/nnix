@@ -94,7 +94,7 @@
     sessionVariables = {
       EDITOR = "nvim";
       BROWSER = "brave";
-      TERMINAL = "alacritty";
+      TERMINAL = "ghostty";
     };
 
     # File management
@@ -293,13 +293,13 @@
         ignoreDups = true;
       };
       
-      initExtra = ''
+      initContent = ''
         # Custom zsh configurations
         export PATH=$HOME/.local/bin:$PATH
-        
+
         # Enable vi mode
         bindkey -v
-        
+
         # Better history search
         bindkey '^R' history-incremental-search-backward
       '';
@@ -410,7 +410,7 @@
     # Alacritty
     alacritty = {
       enable = true;
-      
+
       settings = {
         window = {
           padding = {
@@ -419,26 +419,26 @@
           };
           opacity = 0.95;
         };
-        
+
         font = {
           size = 12;
-          
+
           normal = {
-            family = "JetBrainsMono Nerd Font";
+            family = "RecMonoLinear Nerd Font";
             style = "Regular";
           };
-          
+
           bold = {
-            family = "JetBrainsMono Nerd Font";
+            family = "RecMonoLinear Nerd Font";
             style = "Bold";
           };
-          
+
           italic = {
-            family = "JetBrainsMono Nerd Font";
-            style = "Italic";
+            family = "RecMonoCasual Nerd Font";
+            style = "Regular";
           };
         };
-        
+
         colors = {
           primary = {
             background = "#1d2021";
@@ -448,42 +448,120 @@
       };
     };
 
+    # Ghostty configuration
+    ghostty = {
+      enable = true;
+
+      # Enable shell integration
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableZshIntegration = true;
+
+      settings = {
+        font-family = "RecMonoLinear Nerd Font";
+        font-size = 12;
+
+        # Use RecMonoCasual for italics
+        font-family-italic = "RecMonoCasual Nerd Font";
+        font-family-bold = "RecMonoLinear Nerd Font";
+        font-family-bold-italic = "RecMonoCasual Nerd Font";
+
+        # Window settings
+        window-padding-x = 10;
+        window-padding-y = 10;
+        background-opacity = 0.95;
+
+        # Color scheme (Gruvbox Dark)
+        background = "#1d2021";
+        foreground = "#ebdbb2";
+
+        # Cursor
+        cursor-style = "block";
+        cursor-style-blink = false;
+
+        # Other settings
+        confirm-close-surface = false;
+        quit-after-last-window-closed = false;
+        mouse-hide-while-typing = true;
+
+        # Shell integration
+        shell-integration = "detect";
+        shell-integration-features = "cursor,sudo,title";
+      };
+    };
+
+    # Kitty
+    kitty = {
+      enable = true;
+
+      font = {
+        name = "RecMonoLinear Nerd Font";
+        size = 12;
+      };
+
+      settings = {
+        # Font settings
+        bold_font = "RecMonoLinear Nerd Font Bold";
+        italic_font = "RecMonoCasual Nerd Font";
+        bold_italic_font = "RecMonoCasual Nerd Font Bold";
+
+        # Window settings
+        window_padding_width = 10;
+        background_opacity = "0.95";
+
+        # Cursor settings
+        cursor_shape = "block";
+        cursor_blink_interval = 0;
+
+        # Color scheme (Gruvbox Dark)
+        background = "#1d2021";
+        foreground = "#ebdbb2";
+
+        # Other settings
+        confirm_os_window_close = 0;
+        enable_audio_bell = false;
+        hide_window_decorations = false;
+      };
+    };
+
     # VSCode
     vscode = {
       enable = true;
-      extensions = with pkgs.vscode-extensions; [
-        # Theme
-        pkief.material-icon-theme
-        
-        # Language support
-        ms-python.python
-        ms-vscode.cpptools
-        rust-lang.rust-analyzer
-        golang.go
-        
-        # Tools
-        ms-azuretools.vscode-docker
-        ms-vscode-remote.remote-ssh
-        eamodio.gitlens
-        
-        # Nix support
-        bbenoist.nix
-        jnoortheen.nix-ide
-      ];
-      
-      userSettings = {
-        "editor.fontSize" = 14;
-        "editor.fontFamily" = "'JetBrainsMono Nerd Font', monospace";
-        "editor.formatOnSave" = true;
-        "editor.minimap.enabled" = false;
-        "editor.rulers" = [ 80 120 ];
-        "editor.wordWrap" = "on";
-        
-        "workbench.colorTheme" = "Gruvbox Dark Medium";
-        "workbench.iconTheme" = "material-icon-theme";
-        
-        "terminal.integrated.fontSize" = 14;
-        "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
+      profiles.default = {
+        extensions = with pkgs.vscode-extensions; [
+          # Theme
+          pkief.material-icon-theme
+
+          # Language support
+          ms-python.python
+          ms-vscode.cpptools
+          rust-lang.rust-analyzer
+          golang.go
+
+          # Tools
+          ms-azuretools.vscode-docker
+          ms-vscode-remote.remote-ssh
+          eamodio.gitlens
+
+          # Nix support
+          bbenoist.nix
+          jnoortheen.nix-ide
+        ];
+
+        userSettings = {
+          "editor.fontSize" = 14;
+          "editor.fontFamily" = "'RecMonoLinear Nerd Font', monospace";
+          "editor.formatOnSave" = true;
+          "editor.minimap.enabled" = false;
+          "editor.rulers" = [ 80 120 ];
+          "editor.wordWrap" = "on";
+
+          "workbench.colorTheme" = "Gruvbox Dark Medium";
+          "workbench.iconTheme" = "material-icon-theme";
+
+          "terminal.integrated.fontSize" = 14;
+          "terminal.integrated.fontFamily" = "'RecMonoLinear Nerd Font'";
+        };
       };
     };
 
@@ -526,7 +604,7 @@
     gpg-agent = {
       enable = true;
       enableSshSupport = true;
-      pinentryPackage = pkgs.pinentry-gtk2;
+      pinentry.package = pkgs.pinentry-gtk2;
     };
   };
 
