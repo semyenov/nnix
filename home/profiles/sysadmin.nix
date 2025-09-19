@@ -12,7 +12,7 @@
     awscli2 google-cloud-sdk azure-cli doctl
     restic borgbackup rclone rsync
     lsd eza fd ripgrep bat dust duf broot ranger mc ncdu
-    jq yq xq miller sd
+    jq yq miller sd
     gh gitlab lazygit delta difftastic tig
     postgresql mariadb redis mongosh pgcli mycli
     gdb valgrind perf-tools flamegraph hyperfine
