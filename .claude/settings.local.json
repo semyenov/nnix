@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(nix flake check:*)",
+      "Bash(nix search:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

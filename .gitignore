@@ -1,0 +1,78 @@
+# NixOS and Nix related
+result
+result-*
+/result
+/result-*
+
+# Nix build outputs
+*.drv
+*.lock.lock
+
+# Hardware configuration (usually machine-specific)
+# Uncomment if you want to exclude it from version control
+# /hosts/*/hardware-configuration.nix
+
+# Secrets and sensitive data
+*.secret
+*.key
+*.pem
+*.crt
+secrets/
+.secrets/
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.cache
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.env
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Direnv
+.direnv/
+.envrc.local
+
+# Local configuration overrides
+local.nix
+*.local.nix
+
+# Backup files
+*.backup
+*.old
+
+# System files
+.directory
+desktop.ini
+
+# Generated documentation
+docs/_build/
+*.pdf
+
+# Nix profile links
+/nix/var/nix/profiles/per-user/*/profile
+/nix/var/nix/profiles/per-user/*/profile-*-link
+
+# Home Manager
+.config/nixpkgs/home.nix.backup*

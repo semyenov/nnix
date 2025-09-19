@@ -1,0 +1,270 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.modules.system.security;
+in
+{
+  options.modules.system.security = {
+    enable = mkEnableOption "Enhanced security settings";
+    
+    enableFirewall = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable and configure the firewall";
+    };
+    
+    enableFaillock = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable account lockout after failed login attempts";
+    };
+    
+    enableAppArmor = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable AppArmor for application sandboxing";
+    };
+    
+    sshHardening = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Apply SSH hardening settings";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # Firewall configuration
+    networking.firewall = mkIf cfg.enableFirewall {
+      enable = true;
+      
+      # Log dropped packets
+      logReversePathDrops = true;
+      logRefusedConnections = true;
+      logRefusedUnicastsOnly = true;
+      
+      # Ping configuration
+      allowPing = false;
+      
+      # Example port configurations
+      # allowedTCPPorts = [ 22 80 443 ];
+      # allowedUDPPorts = [ ];
+    };
+
+    # Security settings
+    security = {
+      # Enable sudo with insults (fun but optional)
+      sudo = {
+        enable = true;
+        wheelNeedsPassword = true;
+        extraConfig = ''
+          # Require password for sudo
+          Defaults  timestamp_timeout=5
+          Defaults  lecture=always
+          Defaults  insults
+        '';
+      };
+      
+      # Kernel hardening
+      protectKernelImage = true;
+      forcePageTableIsolation = true;
+      virtualisation.flushL1DataCache = "always";
+      
+      # AppArmor
+      apparmor = mkIf cfg.enableAppArmor {
+        enable = true;
+        killUnconfinedConfinables = true;
+      };
+      
+      # Polkit
+      polkit.enable = true;
+      
+      # PAM configuration
+      pam = {
+        # Account lockout after failed attempts
+        services = mkIf cfg.enableFaillock {
+          sshd.faillock.enable = true;
+          login.faillock.enable = true;
+          
+          # Configure faillock
+          sudo.faillock = {
+            enable = true;
+            deny = 5;  # Lock after 5 failed attempts
+            unlockTime = 600;  # Unlock after 10 minutes
+          };
+        };
+        
+        # USB protection
+        usb-protection = {
+          enable = true;
+        };
+        
+        # Login settings
+        loginLimits = [
+          {
+            domain = "@users";
+            item = "core";
+            type = "hard";
+            value = "0";  # Disable core dumps for users
+          }
+          {
+            domain = "*";
+            item = "nofile";
+            type = "soft";
+            value = "4096";  # Limit open files
+          }
+        ];
+      };
+    };
+
+    # Boot security
+    boot = {
+      # Kernel security parameters
+      kernel.sysctl = {
+        # Network security
+        "net.ipv4.conf.all.accept_redirects" = 0;
+        "net.ipv4.conf.default.accept_redirects" = 0;
+        "net.ipv6.conf.all.accept_redirects" = 0;
+        "net.ipv6.conf.default.accept_redirects" = 0;
+        
+        "net.ipv4.conf.all.accept_source_route" = 0;
+        "net.ipv4.conf.default.accept_source_route" = 0;
+        "net.ipv6.conf.all.accept_source_route" = 0;
+        "net.ipv6.conf.default.accept_source_route" = 0;
+        
+        "net.ipv4.conf.all.send_redirects" = 0;
+        "net.ipv4.conf.default.send_redirects" = 0;
+        
+        "net.ipv4.conf.all.log_martians" = 1;
+        "net.ipv4.conf.default.log_martians" = 1;
+        
+        # Enable SYN flood protection
+        "net.ipv4.tcp_syncookies" = 1;
+        
+        # Ignore ICMP redirects
+        "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+        
+        # Disable IP forwarding
+        "net.ipv4.ip_forward" = 0;
+        "net.ipv6.conf.all.forwarding" = 0;
+        
+        # Kernel hardening
+        "kernel.kptr_restrict" = 2;
+        "kernel.dmesg_restrict" = 1;
+        "kernel.printk" = "3 3 3 3";
+        "kernel.unprivileged_bpf_disabled" = 1;
+        "kernel.yama.ptrace_scope" = 1;
+        
+        # Disable magic SysRq key
+        "kernel.sysrq" = 0;
+        
+        # Hide kernel pointers
+        "kernel.kexec_load_disabled" = 1;
+      };
+      
+      # Blacklist unnecessary kernel modules
+      blacklistedKernelModules = [
+        "dccp"
+        "sctp"
+        "rds"
+        "tipc"
+        "bluetooth"
+        "usb-storage"  # If not needed
+      ];
+    };
+
+    # SSH hardening
+    services.openssh = mkIf cfg.sshHardening {
+      enable = true;
+      
+      settings = {
+        # Authentication
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        PubkeyAuthentication = true;
+        AuthenticationMethods = "publickey";
+        
+        # Security
+        StrictModes = true;
+        IgnoreRhosts = true;
+        HostbasedAuthentication = false;
+        PermitEmptyPasswords = false;
+        
+        # Forwarding
+        X11Forwarding = false;
+        AllowAgentForwarding = false;
+        AllowTcpForwarding = false;
+        
+        # Timeouts
+        ClientAliveInterval = 300;
+        ClientAliveCountMax = 2;
+        LoginGraceTime = 60;
+        
+        # Limit users
+        AllowUsers = [ "user" ];  # Adjust as needed
+        
+        # Cryptography
+        Ciphers = [
+          "chacha20-poly1305@openssh.com"
+          "aes256-gcm@openssh.com"
+          "aes128-gcm@openssh.com"
+        ];
+        
+        KexAlgorithms = [
+          "curve25519-sha256"
+          "curve25519-sha256@libssh.org"
+        ];
+        
+        Macs = [
+          "hmac-sha2-512-etm@openssh.com"
+          "hmac-sha2-256-etm@openssh.com"
+        ];
+      };
+      
+      # SSH banner
+      extraConfig = ''
+        Banner /etc/ssh/banner
+      '';
+    };
+
+    # Create SSH banner
+    environment.etc."ssh/banner".text = ''
+      ##############################################################
+      #                     AUTHORIZED ACCESS ONLY                #
+      #                                                           #
+      # Unauthorized access to this system is strictly prohibited #
+      # All access attempts are logged and monitored             #
+      ##############################################################
+    '';
+
+    # Audit daemon
+    security.auditd.enable = true;
+    security.audit = {
+      enable = true;
+      rules = [
+        "-w /etc/passwd -p wa -k passwd_changes"
+        "-w /etc/shadow -p wa -k shadow_changes"
+        "-w /etc/group -p wa -k group_changes"
+      ];
+    };
+
+    # Additional packages for security
+    environment.systemPackages = with pkgs; [
+      # Security tools
+      fail2ban
+      aide  # File integrity checker
+      chkrootkit
+      lynis  # Security auditing
+      clamav  # Antivirus
+      
+      # Network security
+      iptables
+      nftables
+      
+      # Password management
+      pwgen
+      pass
+    ];
+  };
+}
