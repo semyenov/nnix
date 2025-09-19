@@ -58,9 +58,9 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs; };
-              
+
               # User configurations
-              home-manager.users.user = import ./home/default.nix;
+              home-manager.users.semyenov = import ./home/default.nix;
             }
 
             # Custom modules

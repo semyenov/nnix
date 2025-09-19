@@ -3,7 +3,9 @@
     "allow": [
       "WebSearch",
       "Bash(nix flake check:*)",
-      "Bash(nix search:*)"
+      "Bash(nix search:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

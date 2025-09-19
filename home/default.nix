@@ -3,8 +3,8 @@
 {
   # Home Manager configuration for the user
   home = {
-    username = "user";
-    homeDirectory = "/home/user";
+    username = "semyenov";
+    homeDirectory = "/home/semyenov";
     
     # State version for Home Manager
     stateVersion = "24.11";
@@ -114,8 +114,8 @@
     # Git
     git = {
       enable = true;
-      userName = "Your Name"; # Change this
-      userEmail = "your.email@example.com"; # Change this
+      userName = "Alexander Semyenov";
+      userEmail = "semyenov@hotmail.com";
       
       extraConfig = {
         init.defaultBranch = "main";

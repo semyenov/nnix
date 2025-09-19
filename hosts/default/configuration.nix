@@ -97,10 +97,10 @@
   };
 
   # User accounts
-  users.users.user = {
+  users.users.semyenov = {
     isNormalUser = true;
-    description = "Main User";
-    extraGroups = [ 
+    description = "Alexander Semyenov";
+    extraGroups = [
       "wheel"         # Enable 'sudo'
       "networkmanager"
       "audio"
