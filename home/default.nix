@@ -53,8 +53,9 @@
       httpie
       lazygit
       lazydocker
-      gh # GitHub CLI
-      
+      gh           # GitHub CLI
+      gopass       # Password manager compatible with pass
+
       # Modern shell tools
       atuin        # Magical shell history with sync
       mcfly        # Context-aware history search
