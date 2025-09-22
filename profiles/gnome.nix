@@ -38,7 +38,7 @@
   # Fonts
   fonts = {
     packages = with pkgs; [
-      (nerd-fonts.recursive-mono)
+      nerd-fonts.recursive-mono
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
@@ -57,6 +57,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    gopass
+    gopass-jsonapi
     alacritty
     kitty
     ghostty
@@ -65,6 +67,8 @@
     adwaita-icon-theme
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+    gnomeExtensions.just-perfection
+    gnomeExtensions.user-themes
   ];
 
   security.pam.services = {

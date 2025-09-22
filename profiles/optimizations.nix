@@ -17,6 +17,7 @@
       "splash"
       "mitigations=off"  # Better performance, slightly less secure
       "nowatchdog"
+      "loglevel=3"
       "modprobe.blacklist=sp5100_tco"  # Disable watchdog timer
       "systemd.unified_cgroup_hierarchy=1"
       "transparent_hugepage=madvise"
@@ -135,3 +136,5 @@
     };
   };
 }
+
+

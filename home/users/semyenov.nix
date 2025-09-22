@@ -8,10 +8,18 @@
   };
 
   imports = [
-    ../profiles/common.nix
     ../profiles/desktop.nix
     ../profiles/sysadmin.nix
   ];
+
+  programs.home-manager.enable = true;
+
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
 
   programs.git = {
     enable = true;
@@ -27,5 +35,3 @@
     };
   };
 }
-
-

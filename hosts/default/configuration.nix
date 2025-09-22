@@ -3,12 +3,11 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../profiles/base.nix
-    ../../profiles/desktop-gnome.nix
+    ../../profiles/gnome.nix
     ../../profiles/nvidia.nix
     ../../profiles/docker.nix
-    ../../profiles/security-hardened.nix
-    ../../profiles/system-optimizations.nix
+    ../../profiles/security.nix
+    ../../profiles/optimizations.nix
   ];
 
   # Boot loader configuration
@@ -23,6 +22,7 @@
   networking = {
     hostName = "nixos";
     firewall.enable = true;
+    networkmanager.enable = true;
   };
 
   time.timeZone = "UTC";
@@ -45,6 +45,41 @@
     font = "Lat2-Terminus16"; 
     useXkbConfig = true; 
   };
+
+  # Nix settings
+  nixpkgs.config.allowUnfree = true;
+  
+  nix = {
+    package = pkgs.nixVersions.stable;
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+      trusted-users = [ "root" "@wheel" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    optimise.automatic = true;
+  };
+
+  # Services
+  services.fwupd.enable = true;
+  boot.tmp.cleanOnBoot = true;
+  programs.fish.enable = true;
+
+  # Base system packages
+  environment.systemPackages = with pkgs; [
+  ];
 
   # User accounts
   users.groups.semyenov = {
