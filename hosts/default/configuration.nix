@@ -19,8 +19,6 @@
     timeout = 3;
   };
 
-  # Nvidia specifics moved into profiles/nvidia.nix
-
   # Networking
   networking = {
     hostName = "nixos";
@@ -43,13 +41,10 @@
     };
   };
 
-  console = { font = "Lat2-Terminus16"; useXkbConfig = true; };
-
-  # Audio/desktop handled in desktop profile
-
-  # GUI handled in desktop profile
-
-  # Printing/Bluetooth handled in desktop profile
+  console = { 
+    font = "Lat2-Terminus16"; 
+    useXkbConfig = true; 
+  };
 
   # User accounts
   users.groups.semyenov = {
@@ -63,36 +58,21 @@
     home = "/home/semyenov";
     description = "Alexander Semyenov";
     extraGroups = [
-      "wheel"         # Enable 'sudo'
+      "wheel"
       "networkmanager"
       "audio"
       "video"
       "docker"
       "libvirtd"
     ];
-    shell = pkgs.fish; # Fish as default shell
-    # initialPassword = "changeme"; # Remember to change this!
+    shell = pkgs.fish;
   };
-
-  # Unfree handled in base profile
-
-  # Fonts handled in desktop profile
-
-  # Add overlays
-  # Overlays set at flake level or base profile
-
-  # System packages
-  # Packages moved to profiles as needed
-
-  # Environment variables
-  # Environment variables moved to profiles if needed
 
   # Shell aliases
   environment.shellAliases = {
-    # Modern replacements for core utils
+    # Modern replacements
     ll = "lsd -l";
     la = "lsd -la";
-    l = "lsd -l";
     ls = "lsd";
     cat = "bat";
     grep = "rg";
@@ -105,37 +85,17 @@
     htop = "btm";
     dig = "dog";
     
-    # Git aliases
+    # Git
     g = "git";
     gg = "gitui";
     lg = "lazygit";
     
-    # Quick commands
-    j = "just";
-    h = "hyperfine";
-    
-    # NixOS aliases
+    # NixOS
     rebuild = "sudo nixos-rebuild switch --flake .#nixos";
     update = "nix flake update";
     clean = "sudo nix-collect-garbage -d";
     generations = "sudo nix-env --list-generations --profile /nix/var/nix/profiles/system";
   };
 
-  # Programs configuration
-  # Programs moved to profiles or HM
-
-  # Virtualisation
-  # Virtualisation handled in profiles
-
-  # Services
-  # Services mostly handled in profiles
-
-  # Nix configuration
-  # Nix settings moved to base profile
-
-  # System state version (DO NOT CHANGE)
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken.
   system.stateVersion = "25.05";
 }

@@ -264,36 +264,20 @@ in
           bantime = 3600
           backend = systemd
         '';
-
-        # Protect systemd auth - disabled due to filter issues
-        # systemd-auth = ''
-        #   enabled = true
-        #   filter = systemd[journalmatch="_SYSTEMD_UNIT=systemd-logind.service"]
-        #   maxretry = 5
-        #   backend = systemd
-        # '';
       };
     };
 
     # Additional packages for security
     environment.systemPackages = with pkgs; [
-      # Security tools
-      aide  # File integrity checker
+      aide
       chkrootkit
-      lynis  # Security auditing
-      # clamav is heavy; enable via dedicated profile when needed
-
-      # Network security
+      lynis
       iptables
       nftables
-
-      # Password management
       pwgen
       pass
     ];
 
-    # Optional USB control via usbguard - disabled by default as it can be problematic
-    # Enable per-host if needed
     services.usbguard.enable = lib.mkDefault false;
   };
 }

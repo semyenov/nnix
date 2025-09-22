@@ -3,23 +3,11 @@
 {
   # System performance optimizations
 
-  # Enable zram for better memory compression
   zramSwap = {
     enable = true;
     memoryPercent = 25;  # Use 25% of RAM for zram (about 16GB on your 64GB system)
     algorithm = "zstd";
   };
-
-  # Swap configuration is handled by zram above
-  # Physical swap file commented out - zram is more efficient for desktop use
-  # To enable physical swap file, uncomment below and create /var/swap directory
-  # swapDevices = [
-  #   {
-  #     device = "/var/swap/swapfile";
-  #     size = 8192;  # 8GB
-  #     randomEncryption.enable = true;  # Encrypt with random key on each boot
-  #   }
-  # ];
 
   # Boot optimizations
   boot = {

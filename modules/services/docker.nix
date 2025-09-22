@@ -66,13 +66,7 @@ in
             { base = "172.31.0.0/16"; size = 24; }
           ];
           
-          # Storage settings
-          # storage-opts removed - causes issues with overlay2 driver
-          # storage-opts = [];
-          
-          # Security options
-          # userns-remap disabled - causes issues in NixOS
-          # userns-remap = "default";
+          # Storage and security settings use defaults
           
           # Performance
           max-concurrent-downloads = 10;
@@ -101,14 +95,7 @@ in
         docker-buildx
         dive
         lazydocker
-        skopeo
-        podman
-        buildah
-        kubectl
-        k9s
-        helm
         ctop
-        docker-ls
       ];
 
       # System configuration for Docker
@@ -135,33 +122,6 @@ in
         wants = [ "network-online.target" ];
       };
 
-      # Helper scripts
-      environment.etc."docker/docker-compose.yml.example" = {
-        text = ''
-          version: '3.8'
-          
-          services:
-            example:
-              image: nginx:alpine
-              container_name: example-nginx
-              ports:
-                - "8080:80"
-              volumes:
-                - ./html:/usr/share/nginx/html:ro
-              restart: unless-stopped
-              networks:
-                - example-network
-          
-          networks:
-            example-network:
-              driver: bridge
-          
-          volumes:
-            example-data:
-              driver: local
-        '';
-        mode = "0644";
-      };
 
       # Aliases for Docker commands
       environment.shellAliases = {
