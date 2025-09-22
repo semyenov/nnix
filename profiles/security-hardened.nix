@@ -21,5 +21,3 @@
   # Auditing
   security.auditd.enable = lib.mkDefault true;
 }
-
-

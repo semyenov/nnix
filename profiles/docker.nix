@@ -11,5 +11,3 @@
   # Enable NVIDIA in containers via toolkit when present
   hardware.nvidia-container-toolkit.enable = lib.mkDefault true;
 }
-
-

@@ -7,7 +7,7 @@
     homeDirectory = "/home/semyenov";
     
     # State version for Home Manager
-    stateVersion = "24.11";
+    stateVersion = "25.05";
 
     # User packages
     packages = with pkgs; [

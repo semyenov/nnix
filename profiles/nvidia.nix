@@ -30,5 +30,3 @@
     nvidiaBusId = lib.mkDefault "PCI:1:0:0";
   };
 }
-
-

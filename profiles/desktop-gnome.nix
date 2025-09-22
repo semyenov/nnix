@@ -62,6 +62,7 @@
     kitty
     ghostty
     gnome-themes-extra  # Fix missing GTK4 theme files
+    adwaita-icon-theme
     gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock

@@ -15,6 +15,8 @@
     thunderbird
     dconf
     gnome-tweaks
+    nekoray
+    claude-code
   ];
 
   xdg = {

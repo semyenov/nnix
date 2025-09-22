@@ -12,9 +12,13 @@
       "Bash(git ls-remote:*)",
       "Bash(awk:*)",
       "Bash(journalctl:*)",
-      "Bash(systemctl:*)"
+      "Bash(systemctl:*)",
+      "Bash(systemd-analyze:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "/home/semyenov/.config"
+    ]
   }
 }

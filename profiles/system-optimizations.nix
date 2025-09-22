@@ -10,14 +10,16 @@
     algorithm = "zstd";
   };
 
-  # Add swap file with encryption (8GB)
-  swapDevices = [
-    {
-      device = "/var/swap/swapfile";
-      size = 8192;  # 8GB
-      randomEncryption.enable = true;  # Encrypt with random key on each boot
-    }
-  ];
+  # Swap configuration is handled by zram above
+  # Physical swap file commented out - zram is more efficient for desktop use
+  # To enable physical swap file, uncomment below and create /var/swap directory
+  # swapDevices = [
+  #   {
+  #     device = "/var/swap/swapfile";
+  #     size = 8192;  # 8GB
+  #     randomEncryption.enable = true;  # Encrypt with random key on each boot
+  #   }
+  # ];
 
   # Boot optimizations
   boot = {
@@ -113,8 +115,7 @@
 
   # I/O scheduler optimizations
   services.udev.extraRules = ''
-    # Use 'none' scheduler for NVMe (they have their own scheduling)
-    ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+    # NVMe drives don't expose scheduler attribute in modern kernels - skip
     # Use 'mq-deadline' for SATA SSDs
     ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
     # Use 'bfq' for HDDs
@@ -145,5 +146,4 @@
       workstation = true;
     };
   };
-
 }

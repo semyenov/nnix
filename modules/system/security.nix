@@ -265,13 +265,13 @@ in
           backend = systemd
         '';
 
-        # Protect systemd auth
-        systemd-auth = ''
-          enabled = true
-          filter = systemd[journalmatch="_SYSTEMD_UNIT=systemd-logind.service"]
-          maxretry = 5
-          backend = systemd
-        '';
+        # Protect systemd auth - disabled due to filter issues
+        # systemd-auth = ''
+        #   enabled = true
+        #   filter = systemd[journalmatch="_SYSTEMD_UNIT=systemd-logind.service"]
+        #   maxretry = 5
+        #   backend = systemd
+        # '';
       };
     };
 

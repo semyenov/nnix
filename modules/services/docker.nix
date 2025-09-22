@@ -67,13 +67,12 @@ in
           ];
           
           # Storage settings
-          storage-opts = [
-          ] ++ (if cfg.storageDriver == "overlay2" then [
-            "overlay2.override_kernel_check=true"
-          ] else []);
+          # storage-opts removed - causes issues with overlay2 driver
+          # storage-opts = [];
           
           # Security options
-          userns-remap = "default";
+          # userns-remap disabled - causes issues in NixOS
+          # userns-remap = "default";
           
           # Performance
           max-concurrent-downloads = 10;
