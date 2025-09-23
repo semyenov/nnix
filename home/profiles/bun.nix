@@ -20,7 +20,6 @@
     # Build tools and bundlers
     esbuild
     vite
-    webpack
     rollup
     parcel
 
