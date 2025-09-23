@@ -14,6 +14,7 @@
     ../profiles/sysadmin.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
+    ../profiles/bun.nix
   ];
 
   home = {

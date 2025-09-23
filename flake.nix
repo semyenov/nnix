@@ -77,6 +77,7 @@
     # Custom packages
     packages.${system} = {
       cursor-appimage = pkgs.callPackage ./packages/cursor-appimage.nix {};
+      throne = pkgs.callPackage ./packages/throne.nix {};
     };
 
     overlays = {
