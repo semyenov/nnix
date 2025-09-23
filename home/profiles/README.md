@@ -4,7 +4,7 @@ This directory contains reusable Home Manager profiles for user environment conf
 
 ## Available Profiles
 
-### CLI Tools (`cli-tools.nix`)
+### CLI Tools (`cli.nix`)
 Modern command-line tools and shell enhancements.
 
 **Includes:**
@@ -113,7 +113,7 @@ Import profiles in your user configuration:
   };
 
   imports = [
-    ../profiles/cli-tools.nix
+    ../profiles/cli.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
     ../profiles/sysadmin.nix
@@ -135,7 +135,7 @@ Import only the profiles you need:
 ```nix
 {
   imports = [
-    ../profiles/cli-tools.nix     # Always useful
+    ../profiles/cli.nix     # Always useful
     ../profiles/development.nix   # For developers
     # ../profiles/productivity.nix  # Skip if using different apps
     # ../profiles/sysadmin.nix      # Only for system administrators
@@ -190,7 +190,7 @@ When adding packages to profiles:
 
 ## Environment Variables
 
-Common environment variables are set in `cli-tools.nix`:
+Common environment variables are set in `cli.nix`:
 
 ```nix
 home.sessionVariables = {
@@ -211,7 +211,7 @@ home.sessionVariables = {
 
 ## Tips
 
-1. **Start minimal**: Begin with `cli-tools.nix` and add more as needed
+1. **Start minimal**: Begin with `cli.nix` and add more as needed
 2. **Review packages**: Periodically review installed packages and remove unused ones
 3. **Custom configs**: Add program-specific configurations in user files
 4. **Dotfiles**: Use `home.file` to manage dotfiles declaratively

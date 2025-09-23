@@ -6,10 +6,11 @@
   ...
 }: {
   imports = [
-    ../profiles/cli-tools.nix
+    ../profiles/cli.nix
+    ../profiles/common.nix
+    ../profiles/sysadmin.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
-    ../profiles/sysadmin.nix
   ];
 
   home = {
@@ -25,7 +26,7 @@
     userName = "Alexander Semyenov";
     userEmail = "semyenov@hotmail.com";
     extraConfig = {
-      init.defaultBranch = "main";
+      init.defaultBranch = "master";
       core.editor = "nvim";
       pull.rebase = false;
       push.autoSetupRemote = true;

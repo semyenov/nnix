@@ -104,47 +104,5 @@ in {
 
     # Essential services
     services.fwupd.enable = true;
-
-    # Enable Fish shell
-    programs.fish.enable = true;
-
-    # Essential system packages
-    environment.systemPackages = with pkgs; [
-      gopass
-      gopass-jsonapi
-      nekoray
-    ];
-
-    # Modern CLI aliases
-    environment.shellAliases = {
-      # Modern replacements
-      ll = "lsd -l";
-      la = "lsd -la";
-      ls = "lsd";
-      cat = "bat";
-      grep = "rg";
-      find = "fd";
-      sed = "sd";
-      du = "dust";
-      df = "duf";
-      ps = "procs";
-      top = "btm";
-      htop = "btm";
-      dig = "dog";
-
-      # Git
-      g = "git";
-      gg = "gitui";
-      lg = "lazygit";
-
-      # NixOS
-      rebuild = "sudo nixos-rebuild switch --flake .#${cfg.hostName}";
-      update = "nix flake update";
-      clean = "sudo nix-collect-garbage -d";
-      generations = "sudo nix-env --list-generations --profile /nix/var/nix/profiles/system";
-    };
-
-    # System state version
-    system.stateVersion = "25.05";
   };
 }

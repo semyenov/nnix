@@ -26,7 +26,7 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │   ├── users/             # User-specific configurations
 │   │   └── semyenov.nix  # User configuration
 │   └── profiles/          # Reusable home-manager profiles
-│       ├── cli-tools.nix    # Modern CLI tools
+│       ├── cli.nix    # Modern CLI tools
 │       ├── development.nix  # Development tools
 │       ├── productivity.nix # Office and media apps
 │       └── sysadmin.nix     # System administration tools
@@ -108,12 +108,12 @@ Available profiles:
 - **nvidia**: NVIDIA GPU drivers with PRIME offloading
 - **docker**: Docker container runtime with NVIDIA support
 - **security**: Comprehensive security hardening
-- **optimizations**: Performance tuning and optimizations
+- **optimizations**: Performance tuning and optimizations (toggle via `profiles.optimizations.enable`)
 
 ### Home-Manager Profiles
 
 User profiles are in `home/profiles/`:
-- **cli-tools**: Modern CLI replacements (lsd, bat, ripgrep, etc.)
+- **cli**: Modern CLI replacements (lsd, bat, ripgrep, etc.)
 - **development**: IDEs, version control, databases
 - **productivity**: Browsers, office suite, media apps
 - **sysadmin**: Monitoring, cloud CLIs, infrastructure tools
@@ -292,13 +292,18 @@ nix flake check
 
 ### Performance Optimization
 
-The `optimizations.nix` profile includes:
+The `optimizations.nix` profile (enabled by default in `profiles/default.nix`) includes:
 - ZRAM swap compression
 - Kernel performance tuning
 - SystemD optimization
 - EarlyOOM for memory management
 - I/O scheduler tuning
 - Tmpfs for /tmp
+
+Disable it per host if needed:
+```nix
+profiles.optimizations.enable = false;
+```
 
 ### Security Hardening
 

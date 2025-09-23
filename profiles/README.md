@@ -162,7 +162,21 @@ Comprehensive security configuration.
 - Security tools (lynis, aide, chkrootkit)
 
 ### Performance Optimizations (`optimizations.nix`)
-System performance tuning.
+System performance tuning (toggleable).
+### Shell (`shell.nix`)
+Fish shell and common shell aliases.
+
+**Options:**
+- `profiles.shell.enable` - Enable Fish and shell aliases (default: true)
+
+**Provides:**
+- Enables Fish shell
+- Modern aliases for common tools
+- NixOS helper aliases (`rebuild`, `update`, `clean`, `generations`)
+
+
+**Options:**
+- `profiles.optimizations.enable` - Enable performance optimizations (default: true via `profiles/default.nix`)
 
 **Provides:**
 - ZRAM swap compression (25% of RAM)

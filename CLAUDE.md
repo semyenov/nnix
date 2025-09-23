@@ -133,7 +133,7 @@ nix search nixpkgs <package-name>
 - **home/**: Home Manager user configurations
   - `users/`: User-specific configurations (semyenov.nix)
   - `profiles/`: Reusable home-manager profiles
-    - `cli-tools.nix`: Modern CLI tools and shell enhancements
+    - `cli.nix`: Modern CLI tools and shell enhancements
     - `development.nix`: IDEs, version control, databases
     - `productivity.nix`: Browsers, office, media applications
     - `sysadmin.nix`: System administration and monitoring tools

@@ -21,17 +21,15 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       system = "x86_64-linux";
-      config.allowUnfree = true;
     };
   in {
     # NixOS configurations
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        system = system;
         specialArgs = {inherit inputs;};
 
         modules = [
-          ./hosts/default/hardware-configuration.nix
           ./hosts/default/configuration.nix
           {nixpkgs.overlays = [self.overlays.default self.overlays.unstable-packages];}
 
