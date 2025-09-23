@@ -14,7 +14,8 @@
       "Bash(journalctl:*)",
       "Bash(systemctl:*)",
       "Bash(systemd-analyze:*)",
-      "WebFetch(domain:www.cursor.com)"
+      "WebFetch(domain:www.cursor.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": [],

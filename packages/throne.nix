@@ -8,21 +8,21 @@ pkgs.stdenv.mkDerivation rec {
   version = "1.0.6";
 
   src = pkgs.fetchurl {
-    url = "https://github.com/throneproj/Throne/releases/download/v${version}/Throne-${version}-linux-amd64.zip";
+    url = "https://github.com/throneproj/Throne/releases/download/${version}/Throne-${version}-linux-amd64.zip";
     sha256 = "e3b2a49e70049d3aa6cab6767cad9ab0c2f186bc6f61a99017845fa8e7f78ae4";
   };
 
   nativeBuildInputs = with pkgs; [
     unzip
     autoPatchelfHook
-    wrapQtAppsHook
+    qt6.wrapQtAppsHook
   ];
 
   buildInputs = with pkgs; [
-    # Qt dependencies
-    qt5.qtbase
-    qt5.qtsvg
-    qt5.qtx11extras
+    # Qt6 dependencies
+    qt6.qtbase
+    qt6.qtsvg
+    qt6.qtwayland
 
     # System libraries
     stdenv.cc.cc.lib
@@ -69,8 +69,13 @@ pkgs.stdenv.mkDerivation rec {
     mkdir -p $out/share/applications
     mkdir -p $out/share/icons/hicolor/256x256/apps
 
-    # Install binary
-    install -m 755 throne $out/bin/throne
+    # Install binary (the extracted binary is called 'Throne')
+    install -m 755 Throne/Throne $out/bin/throne
+
+    # Install icon if it exists
+    if [ -f Throne/Throne.png ]; then
+      install -m 644 Throne/Throne.png $out/share/icons/hicolor/256x256/apps/throne.png
+    fi
 
     # Create desktop entry
     cat > $out/share/applications/throne.desktop << EOF
@@ -82,11 +87,6 @@ Exec=throne
 Icon=throne
 Categories=Network;Security;
 Terminal=false
-EOF
-
-    # Create a simple icon (placeholder - would need actual icon from the app)
-    cat > $out/share/icons/hicolor/256x256/apps/throne.png << EOF
-# Placeholder icon - in a real package, extract from the application
 EOF
 
     runHook postInstall
