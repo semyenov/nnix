@@ -8,49 +8,6 @@
   home.packages = with pkgs; [
     # Bun JavaScript runtime and toolkit
     bun
-
-    # Node.js runtimes (for compatibility)
-    nodejs_22
-    nodejs_20
-
-    # Package managers
-    yarn
-    pnpm
-
-    # Build tools and bundlers
-    esbuild
-    vite
-    rollup
-    parcel
-
-    # TypeScript tooling
-    typescript
-    ts-node
-    typecheck
-
-    # Linting and formatting
-    eslint_d
-    prettierd
-    biome
-
-    # Testing frameworks
-    vitest
-    playwright
-    cypress
-
-    # Development servers and tools
-    serve
-    http-server
-    nodemon
-    concurrently
-
-    # Database tools for Node.js
-    sqlite
-    prisma-engines
-
-    # Debugging and profiling
-    clinic
-    0x
   ];
 
   # Bun shell completions

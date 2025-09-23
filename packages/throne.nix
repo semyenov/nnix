@@ -62,34 +62,34 @@ pkgs.stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-    runHook preInstall
+        runHook preInstall
 
-    # Create directories
-    mkdir -p $out/bin
-    mkdir -p $out/share/applications
-    mkdir -p $out/share/icons/hicolor/256x256/apps
+        # Create directories
+        mkdir -p $out/bin
+        mkdir -p $out/share/applications
+        mkdir -p $out/share/icons/hicolor/256x256/apps
 
-    # Install binary (the extracted binary is called 'Throne')
-    install -m 755 Throne/Throne $out/bin/throne
+        # Install binary (the extracted binary is called 'Throne')
+        install -m 755 Throne/Throne $out/bin/throne
 
-    # Install icon if it exists
-    if [ -f Throne/Throne.png ]; then
-      install -m 644 Throne/Throne.png $out/share/icons/hicolor/256x256/apps/throne.png
-    fi
+        # Install icon if it exists
+        if [ -f Throne/Throne.png ]; then
+          install -m 644 Throne/Throne.png $out/share/icons/hicolor/256x256/apps/throne.png
+        fi
 
-    # Create desktop entry
-    cat > $out/share/applications/throne.desktop << EOF
-[Desktop Entry]
-Type=Application
-Name=Throne
-Comment=Cross-platform GUI proxy utility powered by sing-box
-Exec=throne
-Icon=throne
-Categories=Network;Security;
-Terminal=false
-EOF
+        # Create desktop entry
+        cat > $out/share/applications/throne.desktop << EOF
+    [Desktop Entry]
+    Type=Application
+    Name=Throne
+    Comment=Cross-platform GUI proxy utility powered by sing-box
+    Exec=throne
+    Icon=throne
+    Categories=Network;Security;
+    Terminal=false
+    EOF
 
-    runHook postInstall
+        runHook postInstall
   '';
 
   meta = with lib; {
@@ -101,8 +101,8 @@ EOF
     '';
     homepage = "https://github.com/throneproj/Throne";
     license = licenses.gpl3Plus;
-    platforms = [ "x86_64-linux" ];
-    maintainers = [ ];
+    platforms = ["x86_64-linux"];
+    maintainers = [];
     mainProgram = "throne";
   };
 }
