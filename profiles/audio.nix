@@ -8,7 +8,7 @@ with lib; let
   cfg = config.profiles.audio;
 in {
   options.profiles.audio = {
-    enable = mkEnableOption "Audio support with PipeWire" {
+    enable = mkEnableOption "Audio support with PipeWire" // {
       default = true;
     };
 

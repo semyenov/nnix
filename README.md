@@ -1,35 +1,51 @@
 # NixOS Configuration with Flakes
 
-A modern, modular NixOS configuration using Nix Flakes and flake-parts, inspired by awesome community configurations.
+A modern, modular NixOS configuration using Nix Flakes with a clean domain-based structure.
 
 ## Features
 
 - **Flake-based Configuration**: Pure, reproducible system configuration
-- **Modular Structure**: Organized with flake-parts for better maintainability
+- **Domain-Organized Structure**: Clear separation of concerns with self-contained profiles
 - **Home Manager Integration**: Declarative user environment management
-- **Custom Modules**: Reusable system and service modules
-- **Security Hardening**: Optional security enhancements module
-- **Development Ready**: Pre-configured development environments
+- **Configurable Profiles**: Each profile has its own NixOS options
+- **Security Hardening**: Comprehensive security profile with configurable options
+- **Modern CLI Tools**: Latest terminal utilities and productivity tools
+- **Development Ready**: Pre-configured IDEs and development environments
 
 ## Structure
 
 ```
 .
-├── flake.nix                 # Main flake entry point with flake-parts
+├── flake.nix                 # Main flake entry point
 ├── flake.lock               # Lock file for reproducible builds
 ├── hosts/                   # Host-specific configurations
 │   └── default/            # Default host configuration
-│       ├── configuration.nix # System configuration
+│       ├── configuration.nix # Minimal host config (imports profiles)
 │       └── hardware-configuration.nix # Hardware-specific settings
-├── home/                   # Home-manager configurations  
-│   └── default.nix        # Default user environment
-├── modules/                # Reusable NixOS modules
-│   ├── system/           # System-wide modules
-│   │   └── security.nix # Security hardening module
-│   └── services/         # Service configurations
-│       └── docker.nix   # Docker service module
+├── home/                   # Home-manager configurations
+│   ├── users/             # User-specific configurations
+│   │   └── semyenov.nix  # User configuration
+│   └── profiles/          # Reusable home-manager profiles
+│       ├── cli-tools.nix    # Modern CLI tools
+│       ├── development.nix  # Development tools
+│       ├── productivity.nix # Office and media apps
+│       └── sysadmin.nix     # System administration tools
+├── profiles/              # System-level configuration profiles
+│   ├── core.nix          # Boot, networking, nix settings
+│   ├── users.nix         # User account management
+│   ├── audio.nix         # PipeWire audio configuration
+│   ├── fonts.nix         # Font packages and settings
+│   ├── terminals.nix     # Terminal emulators
+│   ├── gnome.nix         # GNOME desktop environment
+│   ├── nvidia.nix        # NVIDIA GPU drivers with PRIME
+│   ├── docker.nix        # Docker container runtime
+│   ├── security.nix      # Security hardening
+│   ├── optimizations.nix # Performance tuning
+│   └── default.nix       # Imports all profiles with defaults
 ├── overlays/             # Package overlays
 └── packages/            # Custom package definitions
+    ├── cursor-appimage.nix # Cursor editor
+    └── yandex-music.nix   # Yandex Music app
 ```
 
 ## Quick Start
@@ -52,23 +68,55 @@ A modern, modular NixOS configuration using Nix Flakes and flake-parts, inspired
    sudo nixos-generate-config --show-hardware-config > hosts/default/hardware-configuration.nix
    ```
 
-3. **Update configuration**:
-   - Edit `hosts/default/configuration.nix`:
-     - Set your hostname
-     - Set your timezone
-     - Configure your user account
-   - Edit `home/default.nix`:
-     - Set your git username and email
-     - Customize installed packages
+3. **Customize profiles** (optional):
+   - Edit `profiles/core.nix` to change hostname, timezone, locale
+   - Edit `profiles/users.nix` to change primary user
+   - Toggle profiles in `profiles/default.nix`
 
 4. **Build and switch**:
    ```bash
    # Build and activate the configuration
    sudo nixos-rebuild switch --flake .#nixos
-   
-   # Or for a specific host
-   sudo nixos-rebuild switch --flake .#<hostname>
    ```
+
+## Profile System
+
+### System Profiles
+
+All system profiles are in `profiles/` and are self-contained with their own options:
+
+```nix
+# Example: Disable a profile
+profiles.docker.enable = false;
+
+# Example: Configure profile options
+profiles.nvidia.prime.intelBusId = "PCI:0:2:0";
+profiles.nvidia.prime.nvidiaBusId = "PCI:1:0:0";
+
+# Example: Security options
+profiles.security.enableAppArmor = true;
+profiles.security.sshHardening = false;
+```
+
+Available profiles:
+- **core**: Essential system configuration (boot, networking, nix)
+- **users**: User account management
+- **audio**: PipeWire audio with optional JACK support
+- **fonts**: System fonts including Nerd Fonts
+- **terminals**: Terminal emulators (alacritty, kitty, ghostty)
+- **gnome**: GNOME desktop environment
+- **nvidia**: NVIDIA GPU drivers with PRIME offloading
+- **docker**: Docker container runtime with NVIDIA support
+- **security**: Comprehensive security hardening
+- **optimizations**: Performance tuning and optimizations
+
+### Home-Manager Profiles
+
+User profiles are in `home/profiles/`:
+- **cli-tools**: Modern CLI replacements (lsd, bat, ripgrep, etc.)
+- **development**: IDEs, version control, databases
+- **productivity**: Browsers, office suite, media apps
+- **sysadmin**: Monitoring, cloud CLIs, infrastructure tools
 
 ## Common Commands
 
@@ -137,115 +185,132 @@ nix-store --optimise
    cp hosts/default/*.nix hosts/laptop/
    ```
 
-3. Add the host to `flake.nix`:
+3. Customize profile options in the new host configuration:
    ```nix
-   nixosConfigurations = {
-     laptop = nixpkgs.lib.nixosSystem {
-       system = "x86_64-linux";
-       # ... configuration
-     };
+   # hosts/laptop/configuration.nix
+   {
+     imports = [
+       ./hardware-configuration.nix
+       ../../profiles
+     ];
+
+     # Customize profiles for this host
+     profiles.core.hostName = "laptop";
+     profiles.nvidia.enable = false;  # No NVIDIA GPU
+     profiles.optimizations.enable = true;
+   }
+   ```
+
+4. Add the host to `flake.nix`:
+   ```nix
+   nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
+     system = "x86_64-linux";
+     specialArgs = { inherit inputs; };
+     modules = [ ./hosts/laptop/configuration.nix ];
    };
    ```
 
-### Using Custom Modules
+### Customizing Profiles
 
-Enable custom modules in your host configuration:
+Each profile can be configured via options:
 
 ```nix
-# In hosts/default/configuration.nix
+# In your host configuration
 {
-  imports = [
-    ./hardware-configuration.nix
-    ../../modules/system/security.nix
-    ../../modules/services/docker.nix
-  ];
-  
-  # Enable modules
-  modules.system.security.enable = true;
-  modules.services.docker = {
+  # Core settings
+  profiles.core = {
+    hostName = "myhost";
+    timeZone = "America/New_York";
+    locale = "en_US.UTF-8";
+  };
+
+  # Docker with specific users
+  profiles.docker = {
     enable = true;
-    users = [ "youruser" ];
+    enableNvidia = false;  # No GPU support needed
+    users = [ "alice" "bob" ];
+  };
+
+  # Security with custom settings
+  profiles.security = {
+    enable = true;
+    enableFirewall = true;
+    enableAppArmor = false;
+    sshHardening = true;
   };
 }
 ```
 
-### Home Manager Configuration
+### Shell Aliases
 
-User-specific configurations are in `home/default.nix`. To add packages or configure programs:
+The configuration includes modern CLI tool aliases by default:
 
-```nix
-home.packages = with pkgs; [
-  firefox
-  vscode
-  # Add more packages
-];
+- `ls`, `ll`, `la` → `lsd` (modern ls)
+- `cat` → `bat` (cat with syntax highlighting)
+- `grep` → `rg` (ripgrep)
+- `find` → `fd` (modern find)
+- `sed` → `sd` (simpler sed)
+- `du` → `dust` (visual disk usage)
+- `df` → `duf` (better df)
+- `ps` → `procs` (modern ps)
+- `top`/`htop` → `btm` (bottom)
+- `dig` → `dog` (modern DNS client)
 
-programs.git = {
-  enable = true;
-  userName = "Your Name";
-  userEmail = "you@example.com";
-};
-```
+NixOS shortcuts:
+- `rebuild` → Rebuild system configuration
+- `update` → Update flake inputs
+- `clean` → Garbage collect
+- `generations` → List system generations
 
-## Tips and Tricks
+## Development Environment
 
-### Development Environments
+The flake includes a development shell with Nix tools:
 
-Use the included dev shell for NixOS development:
 ```bash
 nix develop
 ```
 
-This provides tools like:
+Available tools:
 - `nixpkgs-fmt` - Format Nix files
-- `statix` - Lint Nix files  
+- `alejandra` - Alternative Nix formatter
+- `statix` - Lint Nix files
 - `deadnix` - Find dead Nix code
 - `nil` - Nix language server
+
+## Tips and Tricks
 
 ### Fast Iteration
 
 For quick testing without rebuilding the entire system:
 ```bash
 # Test a specific package
-nix build .#packages.x86_64-linux.<package-name>
+nix build .#packages.x86_64-linux.cursor-appimage
 
-# Test home-manager configuration
-home-manager switch --flake .#user
+# Check configuration without building
+nix flake check
 ```
-
-### Secrets Management
-
-For managing secrets, consider using:
-- [agenix](https://github.com/ryantm/agenix) - age-encrypted secrets
-- [sops-nix](https://github.com/Mic92/sops-nix) - SOPS with various backends
 
 ### Performance Optimization
 
-1. **Use binary caches**: Already configured in the flake
-2. **Enable auto-optimization**: Set in nix.settings
-3. **Regular maintenance**: Run garbage collection weekly
-4. **Limit generations**: Keep only necessary system generations
+The `optimizations.nix` profile includes:
+- ZRAM swap compression
+- Kernel performance tuning
+- SystemD optimization
+- EarlyOOM for memory management
+- I/O scheduler tuning
+- Tmpfs for /tmp
+
+### Security Hardening
+
+The `security.nix` profile provides:
+- Kernel hardening with sysctl tweaks
+- SSH hardening with strong crypto
+- Fail2ban for brute force protection
+- Audit daemon with file monitoring
+- AppArmor support (optional)
+- Firewall with logging
 
 ## Troubleshooting
-
-### Flakes Not Enabled
-
-If you get an error about experimental features:
-```bash
-# Temporarily enable flakes
-nix --experimental-features 'nix-command flakes' flake show
-
-# Or add to your current configuration
-nix.settings.experimental-features = [ "nix-command" "flakes" ];
-```
-
-### Out of Disk Space
-
-```bash
-# Clean up old generations and garbage collect
-sudo nix-collect-garbage -d
-sudo nix-store --optimise
-```
 
 ### Build Failures
 
@@ -256,25 +321,38 @@ nix flake check
 # Build with more verbosity
 sudo nixos-rebuild switch --flake .#nixos --show-trace
 
-# Build with even more details
-sudo nixos-rebuild switch --flake .#nixos --show-trace --verbose
+# See what changed
+nix diff-closures /run/current-system result
 ```
+
+### Out of Disk Space
+
+```bash
+# Clean up everything
+sudo nix-collect-garbage -d
+sudo nix-store --optimise
+
+# Remove specific generations
+sudo nix-env --delete-generations 7d --profile /nix/var/nix/profiles/system
+```
+
+### Profile Conflicts
+
+If profiles conflict, you can:
+1. Disable conflicting profiles in `profiles/default.nix`
+2. Override settings in your host configuration
+3. Use `mkForce` to override values:
+   ```nix
+   services.xserver.videoDrivers = lib.mkForce [ "intel" ];
+   ```
 
 ## Resources
 
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [Nix Flakes Documentation](https://nixos.wiki/wiki/Flakes)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
-- [flake-parts Documentation](https://flake.parts/)
-- [Awesome Nix](https://github.com/nix-community/awesome-nix)
-
-## Community Configurations
-
-This configuration was inspired by:
-- [Misterio77/nix-starter-configs](https://github.com/Misterio77/nix-starter-configs)
-- [Mic92/dotfiles](https://github.com/Mic92/dotfiles)
-- [fufexan/dotfiles](https://github.com/fufexan/dotfiles)
-- [flake-parts examples](https://github.com/hercules-ci/flake-parts-website/tree/main/examples)
+- [NixOS Options Search](https://search.nixos.org/options)
+- [Nix Package Search](https://search.nixos.org/packages)
 
 ## License
 
