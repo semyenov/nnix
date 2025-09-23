@@ -163,17 +163,6 @@ Comprehensive security configuration.
 
 ### Performance Optimizations (`optimizations.nix`)
 System performance tuning (toggleable).
-### Shell (`shell.nix`)
-Fish shell and common shell aliases.
-
-**Options:**
-- `profiles.shell.enable` - Enable Fish and shell aliases (default: true)
-
-**Provides:**
-- Enables Fish shell
-- Modern aliases for common tools
-- NixOS helper aliases (`rebuild`, `update`, `clean`, `generations`)
-
 
 **Options:**
 - `profiles.optimizations.enable` - Enable performance optimizations (default: true via `profiles/default.nix`)
@@ -188,6 +177,22 @@ Fish shell and common shell aliases.
 - Network optimizations (BBR congestion control)
 - Automatic store optimization
 
+### Gaming (`gaming.nix`)
+Gaming tweaks and tooling.
+
+**Options:**
+- `profiles.gaming.enable` - Enable gaming stack (default: false)
+- `profiles.gaming.openCSPorts` - Open common CS 1.6 ports (default: false)
+- `profiles.gaming.steamPackage` - Steam package to use (default: `pkgs.steam`)
+
+**Provides:**
+- 32-bit graphics and Vulkan support
+- Steam (Remote Play firewall opened)
+- Feral GameMode for performance
+- MangoHud overlay
+- Optional firewall ports for CS 1.6
+- Common tools: Lutris, ProtonUp-Qt, Wine, Winetricks, Vulkan tools
+
 ## Usage
 
 ### In Host Configuration
@@ -195,7 +200,7 @@ Fish shell and common shell aliases.
 Import all profiles with defaults:
 
 ```nix
-# hosts/default/configuration.nix
+# hosts/semyenov/configuration.nix
 {
   imports = [
     ./hardware-configuration.nix
@@ -215,8 +220,8 @@ Override profile settings in your host configuration:
 
   # Configure profile options
   profiles.core = {
-    hostName = "myhost";
-    timeZone = "America/New_York";
+    hostName = "semyenov";
+    timeZone = "Europe/Moscow";
   };
 
   profiles.nvidia.prime = {

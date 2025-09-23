@@ -8,6 +8,17 @@
   programs.fish = {
     enable = true;
 
+    interactiveShellInit = ''
+      # Hide direnv log lines, keep user echo output visible
+      set -gx DIRENV_LOG_FORMAT ""
+
+      # GnuPG agent environment
+      set -gx GPG_TTY (tty)
+      set -gx SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      gpgconf --launch gpg-agent >/dev/null 2>/dev/null
+      gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null
+    '';
+
     shellAliases = {
       # Modern replacements
       ll = "lsd -l";

@@ -16,12 +16,12 @@
 
     # Office & Documentation
     obsidian
+    zotero
     libreoffice
 
     # Media
     vlc
     spotify
-    unstable.yandex-music
     gimp
     inkscape
     obs-studio

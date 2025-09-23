@@ -19,17 +19,21 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 ├── flake.nix                 # Main flake entry point
 ├── flake.lock               # Lock file for reproducible builds
 ├── hosts/                   # Host-specific configurations
-│   └── semyenov/     # This host configuration
+│   └── semyenov/           # This host configuration
 │       ├── configuration.nix # Host config (imports profiles)
 │       └── hardware-configuration.nix # Hardware-specific settings
 ├── home/                   # Home-manager configurations
 │   ├── users/             # User-specific configurations
 │   │   └── semyenov.nix  # User configuration
 │   └── profiles/          # Reusable home-manager profiles
-│       ├── cli.nix    # Modern CLI tools
-│       ├── development.nix  # Development tools
+│       ├── cli.nix        # Modern CLI tools
+│       ├── common.nix     # Common packages (gopass, nekoray)
+│       ├── development.nix # Development tools
+│       ├── music.nix      # Music applications (tauon)
+│       ├── nix.nix        # Nix development tools
 │       ├── productivity.nix # Office and media apps
-│       └── sysadmin.nix     # System administration tools
+│       ├── shell.nix      # Fish shell and aliases
+│       └── sysadmin.nix   # System administration tools
 ├── profiles/              # System-level configuration profiles
 │   ├── core.nix          # Boot, networking, nix settings
 │   ├── users.nix         # User account management
@@ -44,8 +48,7 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │   └── default.nix       # Imports all profiles with defaults
 ├── overlays/             # Package overlays
 └── packages/            # Custom package definitions
-    ├── cursor-appimage.nix # Cursor editor
-    └── yandex-music.nix   # Yandex Music app
+    └── cursor-appimage.nix # Cursor editor
 ```
 
 ## Quick Start
@@ -65,7 +68,7 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 
 2. **Generate hardware configuration** for your machine:
    ```bash
-   sudo nixos-generate-config --show-hardware-config > hosts/default/hardware-configuration.nix
+   sudo nixos-generate-config --show-hardware-config > hosts/semyenov/hardware-configuration.nix
    ```
 
 3. **Customize profiles** (optional):
@@ -108,14 +111,19 @@ Available profiles:
 - **nvidia**: NVIDIA GPU drivers with PRIME offloading
 - **docker**: Docker container runtime with NVIDIA support
 - **security**: Comprehensive security hardening
-- **optimizations**: Performance tuning and optimizations (toggle via `profiles.optimizations.enable`)
+- **optimizations**: Performance tuning and optimizations
+- **gaming**: Gaming stack with Steam and performance tools (default: disabled)
 
 ### Home-Manager Profiles
 
 User profiles are in `home/profiles/`:
 - **cli**: Modern CLI replacements (lsd, bat, ripgrep, etc.)
+- **common**: Common packages (gopass, nekoray)
 - **development**: IDEs, version control, databases
+- **music**: Music applications (tauon)
+- **nix**: Nix development tools (formatters, linters, LSP)
 - **productivity**: Browsers, office suite, media apps
+- **shell**: Fish shell configuration with modern aliases
 - **sysadmin**: Monitoring, cloud CLIs, infrastructure tools
 
 ## Common Commands
@@ -170,6 +178,17 @@ sudo nix-env --delete-generations +5 --profile /nix/var/nix/profiles/system
 # Optimize nix store
 nix-store --optimise
 ```
+
+## Current Host Configuration
+
+The `semyenov` host includes additional configuration beyond the base profiles:
+
+- **Timezone**: Europe/Moscow
+- **Network Domain**: semyenov.local
+- **Bluetooth**: Enabled with experimental features
+- **Windows Discovery**: WSDD service for network browsing
+- **Gaming**: Enabled with Steam and performance tools
+- **Docker**: Full configuration with NVIDIA GPU support
 
 ## Configuration Guide
 

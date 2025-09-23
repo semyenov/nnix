@@ -15,13 +15,13 @@ This is a **NixOS configuration repository** using Nix Flakes for modular, repro
 ### System Rebuild and Management
 ```bash
 # Rebuild and switch to new configuration
-sudo nixos-rebuild switch --flake .#nixos
+sudo nixos-rebuild switch --flake .#semyenov
 
 # Test configuration without switching
-sudo nixos-rebuild test --flake .#nixos
+sudo nixos-rebuild test --flake .#semyenov
 
 # Build configuration without activating
-sudo nixos-rebuild build --flake .#nixos
+sudo nixos-rebuild build --flake .#semyenov
 
 # Check flake configuration for errors
 nix flake check
@@ -80,7 +80,6 @@ deadnix
 
 # Build custom packages
 nix build .#packages.x86_64-linux.cursor-appimage
-nix build .#packages.x86_64-linux.yandex-music
 
 # Show all available outputs
 nix flake show --all-systems
@@ -127,15 +126,19 @@ nix search nixpkgs <package-name>
 
 ### Key Directories
 - **hosts/**: Host-specific configurations
-  - `default/`: Main host with configuration.nix and hardware-configuration.nix
-  - Currently configured host: "nixos"
+  - `semyenov/`: Main host with configuration.nix and hardware-configuration.nix
+  - Currently configured host: "semyenov"
 
 - **home/**: Home Manager user configurations
   - `users/`: User-specific configurations (semyenov.nix)
   - `profiles/`: Reusable home-manager profiles
     - `cli.nix`: Modern CLI tools and shell enhancements
+    - `common.nix`: Common packages (gopass, nekoray)
     - `development.nix`: IDEs, version control, databases
+    - `music.nix`: Music applications (tauon)
+    - `nix.nix`: Nix development tools (formatters, linters, LSP)
     - `productivity.nix`: Browsers, office, media applications
+    - `shell.nix`: Fish shell configuration with modern aliases
     - `sysadmin.nix`: System administration and monitoring tools
 
 - **profiles/**: System-level configuration profiles (self-contained with options)
@@ -153,7 +156,6 @@ nix search nixpkgs <package-name>
 
 - **packages/**: Custom package definitions
   - `cursor-appimage.nix`: Cursor editor AppImage
-  - `yandex-music.nix`: Yandex Music application
 
 - **overlays/**: Package overlays
   - Provides unstable packages via `unstable.<package>`
@@ -188,9 +190,10 @@ nix search nixpkgs <package-name>
    - Clean separation between system and user profiles
 
 ### Important Configuration Details
-- **Host Name**: "nixos"
-- **Time Zone**: UTC
+- **Host Name**: "semyenov"
+- **Time Zone**: Europe/Moscow
 - **Locale**: en_US.UTF-8
+- **Network Domain**: semyenov.local
 - **Shell**: Fish with starship prompt (configured in home profiles)
 - **Editor**: Neovim as default (EDITOR=nvim)
 - **Browser**: Brave (BROWSER=brave)
@@ -201,9 +204,14 @@ nix search nixpkgs <package-name>
 - **Allowed Unfree**: Enabled globally
 - **Garbage Collection**: Automatic weekly, deletes generations older than 30 days
 - **Store Optimization**: Automatic deduplication enabled
+- **Additional Features**:
+  - Bluetooth with experimental features enabled
+  - WSDD service for Windows network discovery
+  - Gaming profile enabled with Steam and performance tools
+  - Docker with NVIDIA GPU support
 
-### Shell Aliases (System-wide)
-Modern CLI tool replacements are aliased by default:
+### Shell Aliases (Home Manager)
+Modern CLI tool replacements are aliased in Fish shell:
 - `ls`, `ll`, `la` → lsd
 - `cat` → bat
 - `grep` → rg (ripgrep)
@@ -214,9 +222,12 @@ Modern CLI tool replacements are aliased by default:
 - `ps` → procs
 - `top`/`htop` → btm (bottom)
 - `dig` → dog
+- `g` → git
+- `gg` → gitu
+- `lg` → lazygit
 
 Quick commands:
-- `rebuild` → `sudo nixos-rebuild switch --flake .#nixos`
+- `rebuild` → `sudo nixos-rebuild switch --flake .#semyenov`
 - `update` → `nix flake update`
 - `clean` → `sudo nix-collect-garbage -d`
 - `generations` → Lists system generations
@@ -264,10 +275,10 @@ This repository has pre-configured Claude Code permissions in `.claude/settings.
 nix flake check
 
 # Build with detailed error trace
-sudo nixos-rebuild switch --flake .#nixos --show-trace
+sudo nixos-rebuild switch --flake .#semyenov --show-trace
 
 # Test build without switching
-sudo nixos-rebuild test --flake .#nixos
+sudo nixos-rebuild test --flake .#semyenov
 ```
 
 ### Package Conflicts

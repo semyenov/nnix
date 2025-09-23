@@ -1,4 +1,5 @@
-{...}: {
+{lib, ...}:
+with lib; {
   imports = [
     ./core.nix
     ./users.nix
@@ -10,19 +11,21 @@
     ./docker.nix
     ./security.nix
     ./optimizations.nix
+    ./gaming.nix
   ];
 
   # Default profile configurations
   profiles = {
-    core.enable = true;
-    users.enable = true;
-    audio.enable = true;
-    fonts.enable = true;
-    terminals.enable = true;
-    gnome.enable = true;
-    nvidia.enable = true;
-    docker.enable = true;
-    security.enable = true;
-    optimizations.enable = true;
+    core.enable = mkDefault true;
+    users.enable = mkDefault true;
+    audio.enable = mkDefault true;
+    fonts.enable = mkDefault true;
+    terminals.enable = mkDefault true;
+    gnome.enable = mkDefault true;
+    nvidia.enable = mkDefault true;
+    docker.enable = mkDefault true;
+    security.enable = mkDefault true;
+    optimizations.enable = mkDefault true;
+    gaming.enable = mkDefault false;
   };
 }

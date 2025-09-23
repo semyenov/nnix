@@ -34,6 +34,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # GnuPG agent with pinentry
+    programs.gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      pinentryPackage = pkgs.pinentry-gnome3;
+    };
+
     # Firewall configuration
     networking.firewall = mkIf cfg.enableFirewall {
       enable = true;
@@ -97,7 +104,6 @@ in {
         # Kernel hardening
         "kernel.printk" = "3 3 3 3";
         "kernel.yama.ptrace_scope" = 1;
-        # "kernel.unprivileged_userns_clone" = 0; # Removed - doesn't exist in newer kernels
         "kernel.randomize_va_space" = 2;
         "net.ipv4.tcp_rfc1337" = 1;
         "net.ipv4.tcp_max_syn_backlog" = 4096;
@@ -212,6 +218,8 @@ in {
 
     # Security packages
     environment.systemPackages = with pkgs; [
+      gopass
+      gopass-jsonapi
       aide
       chkrootkit
       lynis

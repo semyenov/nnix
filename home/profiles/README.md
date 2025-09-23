@@ -31,6 +31,36 @@ Modern command-line tools and shell enhancements.
 - Sets environment variables (EDITOR, BROWSER, TERMINAL)
 - Enables direnv with nix-direnv integration
 
+### Common Packages (`common.nix`)
+Common packages used across the system.
+
+**Includes:**
+- **Password Management**: gopass, gopass-jsonapi
+- **Network Tools**: nekoray (proxy client)
+
+### Nix Development (`nix.nix`)
+Nix-specific development tools.
+
+**Includes:**
+- **Formatters**: nixpkgs-fmt, alejandra
+- **Linters**: statix, deadnix
+- **Language Servers**: nil, nixd
+
+### Shell Configuration (`shell.nix`)
+Fish shell configuration with modern aliases.
+
+**Includes:**
+- **Shell**: Fish shell with configuration
+- **Aliases**: Modern CLI tool replacements (ls→lsd, cat→bat, etc.)
+- **Git Shortcuts**: g, gg, lg
+- **NixOS Helpers**: rebuild, update, clean, generations
+
+### Music Applications (`music.nix`)
+Music-related applications.
+
+**Includes:**
+- **Players**: tauon (from unstable channel)
+
 ### Development (`development.nix`)
 Development tools and IDEs.
 
@@ -102,28 +132,32 @@ Tools for system administration and DevOps.
 Import profiles in your user configuration:
 
 ```nix
-# home/users/myuser.nix
+# home/users/semyenov.nix
 { config, pkgs, lib, inputs, ... }:
 
 {
   home = {
-    username = "myuser";
-    homeDirectory = "/home/myuser";
+    username = "semyenov";
+    homeDirectory = "/home/semyenov";
     stateVersion = "25.05";
   };
 
   imports = [
     ../profiles/cli.nix
+    ../profiles/common.nix
+    ../profiles/nix.nix
+    ../profiles/shell.nix
+    ../profiles/music.nix
+    ../profiles/sysadmin.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
-    ../profiles/sysadmin.nix
   ];
 
   # Additional user-specific configuration
   programs.git = {
     enable = true;
-    userName = "Your Name";
-    userEmail = "you@example.com";
+    userName = "Alexander Semyenov";
+    userEmail = "semyenov@hotmail.com";
   };
 }
 ```
@@ -136,7 +170,11 @@ Import only the profiles you need:
 {
   imports = [
     ../profiles/cli.nix     # Always useful
+    ../profiles/common.nix  # Common packages
+    ../profiles/nix.nix     # Nix development tools
+    ../profiles/shell.nix   # Fish shell and aliases
     ../profiles/development.nix   # For developers
+    # ../profiles/music.nix        # Music applications
     # ../profiles/productivity.nix  # Skip if using different apps
     # ../profiles/sysadmin.nix      # Only for system administrators
   ];

@@ -29,6 +29,8 @@
   profiles.docker.dockerComposePackage = pkgs.docker-compose;
   profiles.docker.users = ["semyenov"];
 
+  profiles.gaming.enable = true;
+
   # Additional system packages
   environment.systemPackages = with pkgs; [
     wsdd # Windows Service Discovery Daemon for network browsing
