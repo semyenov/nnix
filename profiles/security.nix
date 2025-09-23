@@ -1,25 +1,226 @@
-{ config, lib, pkgs, ... }:
-
 {
-  imports = [ ../modules/system/security.nix ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.security;
+in {
+  options.profiles.security = {
+    enable =
+      mkEnableOption "Enhanced security settings"
+      // {
+        default = true;
+      };
 
-  modules.system.security.enable = true;
+    enableFirewall = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable and configure the firewall";
+    };
 
-  # Common secure defaults
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
+    enableAppArmor = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable AppArmor for application sandboxing";
+    };
+
+    sshHardening = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Apply SSH hardening settings";
     };
   };
 
-  # USB device policy - disabled by default as it can cause issues
-  # Enable per-host if needed with proper rules
-  services.usbguard.enable = lib.mkDefault false;
+  config = mkIf cfg.enable {
+    # Firewall configuration
+    networking.firewall = mkIf cfg.enableFirewall {
+      enable = true;
+      logReversePathDrops = true;
+      logRefusedConnections = true;
+      logRefusedUnicastsOnly = true;
+      allowPing = true;
+    };
 
-  # Auditing
-  security.auditd.enable = lib.mkDefault true;
+    # Security settings
+    security = {
+      sudo = {
+        enable = true;
+        wheelNeedsPassword = true;
+        extraConfig = ''
+          Defaults  timestamp_timeout=5
+          Defaults  lecture=always
+          Defaults  insults
+        '';
+      };
+
+      protectKernelImage = true;
+      forcePageTableIsolation = true;
+      virtualisation.flushL1DataCache = "always";
+
+      apparmor = mkIf cfg.enableAppArmor {
+        enable = true;
+        killUnconfinedConfinables = true;
+      };
+
+      polkit.enable = true;
+
+      pam.loginLimits = [
+        {
+          domain = "@users";
+          item = "core";
+          type = "hard";
+          value = "0";
+        }
+        {
+          domain = "*";
+          item = "nofile";
+          type = "soft";
+          value = "4096";
+        }
+      ];
+    };
+
+    # Boot security
+    boot = {
+      kernel.sysctl = {
+        # Network security
+        "net.ipv4.conf.all.accept_redirects" = 0;
+        "net.ipv4.conf.default.accept_redirects" = 0;
+        "net.ipv6.conf.all.accept_redirects" = 0;
+        "net.ipv6.conf.default.accept_redirects" = 0;
+        "net.ipv4.conf.all.send_redirects" = 0;
+        "net.ipv4.conf.default.send_redirects" = 0;
+        "net.ipv4.tcp_syncookies" = 1;
+
+        # Kernel hardening
+        "kernel.printk" = "3 3 3 3";
+        "kernel.yama.ptrace_scope" = 1;
+        "kernel.unprivileged_userns_clone" = 0;
+        "kernel.randomize_va_space" = 2;
+        "net.ipv4.tcp_rfc1337" = 1;
+        "net.ipv4.tcp_max_syn_backlog" = 4096;
+        "net.ipv4.tcp_synack_retries" = 3;
+        "net.ipv4.conf.all.accept_source_route" = 0;
+        "net.ipv6.conf.all.accept_source_route" = 0;
+        "net.ipv4.conf.all.log_martians" = 1;
+        "net.ipv4.conf.default.log_martians" = 1;
+        "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+        "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+        "fs.suid_dumpable" = 0;
+        "kernel.kptr_restrict" = 2;
+        "kernel.dmesg_restrict" = 1;
+        "kernel.kexec_load_disabled" = 1;
+        "kernel.unprivileged_bpf_disabled" = 1;
+        "net.core.bpf_jit_harden" = 2;
+        "vm.unprivileged_userfaultfd" = 0;
+      };
+
+      blacklistedKernelModules = [
+        "dccp"
+        "sctp"
+        "rds"
+        "tipc"
+        "bluetooth"
+        "usb-storage"
+      ];
+    };
+
+    # SSH hardening
+    services.openssh = mkIf cfg.sshHardening {
+      enable = true;
+
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        PubkeyAuthentication = true;
+        AuthenticationMethods = "publickey";
+        StrictModes = true;
+        IgnoreRhosts = true;
+        HostbasedAuthentication = false;
+        PermitEmptyPasswords = false;
+        X11Forwarding = false;
+        AllowAgentForwarding = false;
+        AllowTcpForwarding = false;
+        ClientAliveInterval = 300;
+        ClientAliveCountMax = 2;
+        LoginGraceTime = 60;
+
+        Ciphers = [
+          "chacha20-poly1305@openssh.com"
+          "aes256-gcm@openssh.com"
+          "aes128-gcm@openssh.com"
+        ];
+
+        KexAlgorithms = [
+          "curve25519-sha256"
+          "curve25519-sha256@libssh.org"
+        ];
+
+        Macs = [
+          "hmac-sha2-512-etm@openssh.com"
+          "hmac-sha2-256-etm@openssh.com"
+        ];
+      };
+
+      extraConfig = ''
+        Banner /etc/ssh/banner
+      '';
+    };
+
+    # Create SSH banner
+    environment.etc."ssh/banner".text = ''
+      ##############################################################
+      #                     AUTHORIZED ACCESS ONLY                #
+      #                                                           #
+      # Unauthorized access to this system is strictly prohibited #
+      # All access attempts are logged and monitored             #
+      ##############################################################
+    '';
+
+    # Audit daemon
+    security.auditd.enable = true;
+    security.audit = {
+      enable = true;
+      rules = [
+        "-w /etc/passwd -p wa -k passwd_changes"
+        "-w /etc/shadow -p wa -k shadow_changes"
+        "-w /etc/group -p wa -k group_changes"
+      ];
+    };
+
+    # Fail2ban for brute force protection
+    services.fail2ban = {
+      enable = true;
+      maxretry = 3;
+      bantime = "1h";
+      bantime-increment.enable = true;
+
+      jails = {
+        sshd-custom = ''
+          enabled = true
+          port = 22
+          filter = sshd
+          maxretry = 3
+          findtime = 600
+          bantime = 3600
+          backend = systemd
+        '';
+      };
+    };
+
+    # Security packages
+    environment.systemPackages = with pkgs; [
+      aide
+      chkrootkit
+      lynis
+      iptables
+      nftables
+      pwgen
+      pass
+    ];
+
+    services.usbguard.enable = lib.mkDefault false;
+  };
 }
-
-

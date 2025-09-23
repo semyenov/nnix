@@ -1,5 +1,7 @@
-{ pkgs, lib }:
-
+{
+  pkgs,
+  lib,
+}:
 # Official Cursor AppImage with fixes for native modules
 pkgs.appimageTools.wrapType2 {
   name = "cursor";
@@ -29,63 +31,64 @@ pkgs.appimageTools.wrapType2 {
     ln -s $out/bin/cursor $out/bin/Cursor || true
   '';
 
-  extraPkgs = pkgs: with pkgs; [
-    # X11 libraries
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXrandr
-    xorg.libXinerama
-    xorg.libXi
-    xorg.libXfixes
-    xorg.libXrender
-    xorg.libXext
-    xorg.libXtst
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libxcb
-    xorg.libXScrnSaver
-    libxkbcommon
+  extraPkgs = pkgs:
+    with pkgs; [
+      # X11 libraries
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXrandr
+      xorg.libXinerama
+      xorg.libXi
+      xorg.libXfixes
+      xorg.libXrender
+      xorg.libXext
+      xorg.libXtst
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libxcb
+      xorg.libXScrnSaver
+      libxkbcommon
 
-    # Graphics
-    libGL
-    libGLU
-    mesa
-    vulkan-loader
-    libdrm
+      # Graphics
+      libGL
+      libGLU
+      mesa
+      vulkan-loader
+      libdrm
 
-    # GTK/System
-    glib
-    gtk3
-    cairo
-    pango
-    atk
-    gdk-pixbuf
-    at-spi2-atk
-    at-spi2-core
+      # GTK/System
+      glib
+      gtk3
+      cairo
+      pango
+      atk
+      gdk-pixbuf
+      at-spi2-atk
+      at-spi2-core
 
-    # Audio
-    alsa-lib
-    pulseaudio
+      # Audio
+      alsa-lib
+      pulseaudio
 
-    # System libraries
-    fontconfig
-    freetype
-    dbus
-    nss
-    nspr
-    cups
-    expat
-    libnotify
-    libuuid
-    libsecret
-    systemd
+      # System libraries
+      fontconfig
+      freetype
+      dbus
+      nss
+      nspr
+      cups
+      expat
+      libnotify
+      libuuid
+      libsecret
+      systemd
 
-    # Additional libraries for native modules
-    stdenv.cc.cc.lib
-    xorg.libxkbfile
-    libkrb5
-    keyutils
-    e2fsprogs
-    util-linux
-  ];
+      # Additional libraries for native modules
+      stdenv.cc.cc.lib
+      xorg.libxkbfile
+      libkrb5
+      keyutils
+      e2fsprogs
+      util-linux
+    ];
 }

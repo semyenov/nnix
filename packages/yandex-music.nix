@@ -1,5 +1,7 @@
-{ pkgs, lib }:
-
+{
+  pkgs,
+  lib,
+}:
 pkgs.stdenv.mkDerivation rec {
   pname = "yandex-music";
   version = "5.67.0";
@@ -91,7 +93,7 @@ pkgs.stdenv.mkDerivation rec {
     description = "Yandex Music desktop application";
     homepage = "https://music.yandex.ru/";
     license = licenses.unfree;
-    platforms = [ "x86_64-linux" ];
-    maintainers = [ ];
+    platforms = ["x86_64-linux"];
+    maintainers = [];
   };
 }

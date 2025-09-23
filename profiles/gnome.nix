@@ -1,87 +1,73 @@
-{ config, lib, pkgs, ... }:
-
 {
-  # Audio
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.gnome;
+in {
+  options.profiles.gnome = {
+    enable =
+      mkEnableOption "GNOME desktop environment"
+      // {
+        default = true;
+      };
 
-  # X11/Wayland + GNOME
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
-    desktopManager.gnome.enable = true;
-    xkb = {
-      layout = "us";
-      variant = "";
-      options = "caps:escape";
+    wayland = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Wayland support";
     };
   };
 
-  services.printing.enable = true;
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
-
-  # Fonts
-  fonts = {
-    packages = with pkgs; [
-      nerd-fonts.recursive-mono
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      liberation_ttf
-    ];
-
-    fontconfig = {
+  config = mkIf cfg.enable {
+    # X11/Wayland + GNOME
+    services.xserver = {
       enable = true;
-      defaultFonts = {
-        serif = [ "Noto Serif" "Liberation Serif" ];
-        sansSerif = [ "Noto Sans" "Liberation Sans" ];
-        monospace = [ "RecMonoLinear Nerd Font" "Noto Sans Mono" ];
-        emoji = [ "Noto Color Emoji" ];
+      displayManager.gdm = {
+        enable = true;
+        wayland = cfg.wayland;
+      };
+      desktopManager.gnome.enable = true;
+      xkb = {
+        layout = "us";
+        variant = "";
+        options = "caps:escape";
       };
     };
+
+    # Printing support
+    services.printing.enable = true;
+
+    # Bluetooth support
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
+    # GNOME packages
+    environment.systemPackages = with pkgs; [
+      gnome-themes-extra
+      adwaita-icon-theme
+      gnomeExtensions.appindicator
+      gnomeExtensions.dash-to-dock
+      gnomeExtensions.just-perfection
+      gnomeExtensions.user-themes
+    ];
+
+    # GNOME keyring
+    security.pam.services = {
+      gdm.enableGnomeKeyring = true;
+      gdm-password.enableGnomeKeyring = true;
+    };
+
+    services.gnome = {
+      gnome-keyring.enable = true;
+      gnome-settings-daemon.enable = true;
+    };
+
+    # Disable usbguard as it can interfere with desktop usage
+    services.usbguard.enable = lib.mkForce false;
   };
-
-  environment.systemPackages = with pkgs; [
-    gopass
-    gopass-jsonapi
-    alacritty
-    kitty
-    ghostty
-    nekoray
-    gnome-themes-extra
-    adwaita-icon-theme
-    gnomeExtensions.appindicator
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.just-perfection
-    gnomeExtensions.user-themes
-  ];
-
-  security.pam.services = {
-    gdm.enableGnomeKeyring = true;
-    gdm-password.enableGnomeKeyring = true;
-  };
-
-  services.gnome = {
-    gnome-keyring.enable = true;
-    gnome-settings-daemon.enable = true;
-  };
-
-  services.usbguard.enable = lib.mkForce false;
 }
-
-

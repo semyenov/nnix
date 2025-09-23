@@ -1,25 +1,24 @@
-{ config, pkgs, lib, inputs, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
+  imports = [
+    ../profiles/cli-tools.nix
+    ../profiles/development.nix
+    ../profiles/productivity.nix
+    ../profiles/sysadmin.nix
+  ];
+
   home = {
     username = "semyenov";
     homeDirectory = "/home/semyenov";
     stateVersion = "25.05";
   };
 
-  imports = [
-    ../profiles/desktop.nix
-    ../profiles/sysadmin.nix
-  ];
-
   programs.home-manager.enable = true;
-
-  programs.direnv = {
-    enable = true;
-    enableBashIntegration = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
 
   programs.git = {
     enable = true;

@@ -1,11 +1,14 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   # System performance optimizations
 
   zramSwap = {
     enable = true;
-    memoryPercent = 25;  # Use 25% of RAM for zram (about 16GB on your 64GB system)
+    memoryPercent = 25; # Use 25% of RAM for zram (about 16GB on your 64GB system)
     algorithm = "zstd";
   };
 
@@ -15,10 +18,10 @@
     kernelParams = [
       "quiet"
       "splash"
-      "mitigations=off"  # Better performance, slightly less secure
+      "mitigations=off" # Better performance, slightly less secure
       "nowatchdog"
       "loglevel=3"
-      "modprobe.blacklist=sp5100_tco"  # Disable watchdog timer
+      "modprobe.blacklist=sp5100_tco" # Disable watchdog timer
       "systemd.unified_cgroup_hierarchy=1"
       "transparent_hugepage=madvise"
     ];
@@ -43,11 +46,11 @@
 
     # Enable kernel same-page merging for memory deduplication
     kernel.sysctl = {
-      "kernel.sysrq" = 1;  # Enable SysRq for emergencies
-      "vm.swappiness" = 10;  # Prefer RAM over swap
-      "vm.vfs_cache_pressure" = 50;  # Balance between reclaiming dentries/inodes and pagecache
-      "vm.dirty_background_ratio" = 5;  # Start writing to disk when 5% dirty
-      "vm.dirty_ratio" = 10;  # Force synchronous I/O when 10% dirty
+      "kernel.sysrq" = 1; # Enable SysRq for emergencies
+      "vm.swappiness" = 10; # Prefer RAM over swap
+      "vm.vfs_cache_pressure" = 50; # Balance between reclaiming dentries/inodes and pagecache
+      "vm.dirty_background_ratio" = 5; # Start writing to disk when 5% dirty
+      "vm.dirty_ratio" = 10; # Force synchronous I/O when 10% dirty
 
       # Network optimizations
       "net.core.default_qdisc" = "cake";
@@ -87,18 +90,18 @@
 
     # Tmpfiles cleanup rules
     tmpfiles.rules = [
-      "d /tmp 1777 root root 7d"  # Clean /tmp after 7 days
-      "d /var/tmp 1777 root root 30d"  # Clean /var/tmp after 30 days
-      "e /var/cache - - - 30d"  # Clean cache after 30 days
-      "e /var/log - - - 90d"  # Clean old logs after 90 days
+      "d /tmp 1777 root root 7d" # Clean /tmp after 7 days
+      "d /var/tmp 1777 root root 30d" # Clean /var/tmp after 30 days
+      "e /var/cache - - - 30d" # Clean cache after 30 days
+      "e /var/log - - - 90d" # Clean old logs after 90 days
     ];
   };
 
   # EarlyOOM - more aggressive than systemd-oomd
   services.earlyoom = {
     enable = true;
-    freeMemThreshold = 5;  # Kill when <5% RAM free
-    freeSwapThreshold = 10;  # Kill when <10% swap free
+    freeMemThreshold = 5; # Kill when <5% RAM free
+    freeSwapThreshold = 10; # Kill when <10% swap free
     enableNotifications = true;
   };
 
@@ -121,8 +124,8 @@
   };
 
   # Disable unnecessary services for desktop
-  services.udisks2.enable = lib.mkDefault true;  # Keep for automounting
-  services.fstrim.enable = true;  # Weekly TRIM for SSDs
+  services.udisks2.enable = lib.mkDefault true; # Keep for automounting
+  services.fstrim.enable = true; # Weekly TRIM for SSDs
 
   # Fix mDNS warnings
   services.avahi = {
@@ -136,5 +139,3 @@
     };
   };
 }
-
-
