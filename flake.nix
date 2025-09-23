@@ -25,12 +25,12 @@
   in {
     # NixOS configurations
     nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
+      semyenov = nixpkgs.lib.nixosSystem {
         system = system;
         specialArgs = {inherit inputs;};
 
         modules = [
-          ./hosts/default/configuration.nix
+          ./hosts/semyenov/configuration.nix
           {nixpkgs.overlays = [self.overlays.default self.overlays.unstable-packages];}
 
           inputs.home-manager.nixosModules.home-manager
@@ -53,15 +53,21 @@
         statix
         deadnix
         alejandra
+        nixd
         nil # Nix language server
       ];
 
       shellHook = ''
+        # Set up aliases
+        alias rebuild="sudo nixos-rebuild switch --flake .#semyenov"
+        alias update="nix flake update"
+        alias check="nix flake check"
+
         echo "NixOS Development Shell"
         echo "Available commands:"
-        echo "  nixos-rebuild switch --flake .#nixos"
-        echo "  nix flake update"
-        echo "  nix flake check"
+        echo "  rebuild - Rebuild and switch NixOS configuration"
+        echo "  update  - Update flake inputs"
+        echo "  check   - Check flake validity"
       '';
     };
 
@@ -71,7 +77,6 @@
     # Custom packages
     packages.${system} = {
       cursor-appimage = pkgs.callPackage ./packages/cursor-appimage.nix {};
-      yandex-music = pkgs.callPackage ./packages/yandex-music.nix {};
     };
 
     overlays = {

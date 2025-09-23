@@ -11,6 +11,7 @@
     unstable.claude-code
     postman
     neovim
+    zed
 
     # Version Control
     gh

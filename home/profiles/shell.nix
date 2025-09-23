@@ -30,12 +30,10 @@
       lg = "lazygit";
 
       # NixOS
-      rebuild = "sudo nixos-rebuild switch --flake .#nixos";
+      rebuild = "sudo nixos-rebuild switch --flake .#semyenov";
       update = "nix flake update";
       clean = "sudo nix-collect-garbage -d";
       generations = "sudo nix-env --list-generations --profile /nix/var/nix/profiles/system";
     };
   };
 }
-
-

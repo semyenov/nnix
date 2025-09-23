@@ -97,7 +97,7 @@ in {
         # Kernel hardening
         "kernel.printk" = "3 3 3 3";
         "kernel.yama.ptrace_scope" = 1;
-        "kernel.unprivileged_userns_clone" = 0;
+        # "kernel.unprivileged_userns_clone" = 0; # Removed - doesn't exist in newer kernels
         "kernel.randomize_va_space" = 2;
         "net.ipv4.tcp_rfc1337" = 1;
         "net.ipv4.tcp_max_syn_backlog" = 4096;
@@ -122,8 +122,8 @@ in {
         "sctp"
         "rds"
         "tipc"
-        "bluetooth"
-        "usb-storage"
+        # "bluetooth" # Commented out to allow Bluetooth support
+        # "usb-storage" # Commented out to allow USB storage
       ];
     };
 

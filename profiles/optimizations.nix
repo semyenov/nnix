@@ -66,14 +66,15 @@ in {
 
         # Network optimizations
         "net.core.default_qdisc" = "cake";
-        "net.ipv4.tcp_congestion" = "bbr";
+        "net.ipv4.tcp_congestion" = "cubic"; # Changed from bbr (not available)
         "net.ipv4.tcp_fastopen" = 3;
         "net.ipv4.tcp_mtu_probing" = 1;
 
-        # Desktop interactivity
-        "kernel.sched_latency_ns" = 4000000;
-        "kernel.sched_min_granularity_ns" = 500000;
-        "kernel.sched_wakeup_granularity_ns" = 1000000;
+        # Desktop interactivity - removed deprecated sched_* parameters
+        # These were removed in newer kernel versions:
+        # kernel.sched_latency_ns
+        # kernel.sched_min_granularity_ns
+        # kernel.sched_wakeup_granularity_ns
       };
     };
 

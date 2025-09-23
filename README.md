@@ -19,8 +19,8 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 ├── flake.nix                 # Main flake entry point
 ├── flake.lock               # Lock file for reproducible builds
 ├── hosts/                   # Host-specific configurations
-│   └── default/            # Default host configuration
-│       ├── configuration.nix # Minimal host config (imports profiles)
+│   └── semyenov/     # This host configuration
+│       ├── configuration.nix # Host config (imports profiles)
 │       └── hardware-configuration.nix # Hardware-specific settings
 ├── home/                   # Home-manager configurations
 │   ├── users/             # User-specific configurations
@@ -76,7 +76,7 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 4. **Build and switch**:
    ```bash
    # Build and activate the configuration
-   sudo nixos-rebuild switch --flake .#nixos
+   sudo nixos-rebuild switch --flake .#semyenov
    ```
 
 ## Profile System
@@ -124,13 +124,13 @@ User profiles are in `home/profiles/`:
 
 ```bash
 # Rebuild and switch to new configuration
-sudo nixos-rebuild switch --flake .#nixos
+sudo nixos-rebuild switch --flake .#semyenov
 
 # Test configuration without switching
-sudo nixos-rebuild test --flake .#nixos
+sudo nixos-rebuild test --flake .#semyenov
 
 # Build configuration without activating
-sudo nixos-rebuild build --flake .#nixos
+sudo nixos-rebuild build --flake .#semyenov
 
 # Rollback to previous generation
 sudo nixos-rebuild switch --rollback
@@ -182,7 +182,7 @@ nix-store --optimise
 
 2. Copy and modify configuration files:
    ```bash
-   cp hosts/default/*.nix hosts/laptop/
+   cp hosts/semyenov/*.nix hosts/laptop/
    ```
 
 3. Customize profile options in the new host configuration:

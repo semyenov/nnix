@@ -21,7 +21,7 @@
     # Media
     vlc
     spotify
-    yandex-music
+    unstable.yandex-music
     gimp
     inkscape
     obs-studio
