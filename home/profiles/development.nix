@@ -43,6 +43,5 @@
 
     # Code Analysis
     scc
-    onefetch
   ];
 }

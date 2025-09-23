@@ -10,7 +10,6 @@
     ./docker.nix
     ./security.nix
     ./optimizations.nix
-    ./shell.nix
   ];
 
   # Default profile configurations
@@ -25,6 +24,5 @@
     docker.enable = true;
     security.enable = true;
     optimizations.enable = true;
-    shell.enable = true;
   };
 }

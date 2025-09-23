@@ -1,26 +1,14 @@
 {
   config,
-  lib,
   pkgs,
+  lib,
+  inputs,
   ...
-}:
-with lib; let
-  cfg = config.profiles.shell;
-in {
-  options.profiles.shell = {
-    enable =
-      mkEnableOption "Shell configuration and aliases"
-      // {
-        default = true;
-      };
-  };
+}: {
+  programs.fish = {
+    enable = true;
 
-  config = mkIf cfg.enable {
-    # Enable Fish shell
-    programs.fish.enable = true;
-
-    # Modern CLI aliases
-    environment.shellAliases = {
+    shellAliases = {
       # Modern replacements
       ll = "lsd -l";
       la = "lsd -la";
@@ -42,10 +30,12 @@ in {
       lg = "lazygit";
 
       # NixOS
-      rebuild = "sudo nixos-rebuild switch --flake .#${config.networking.hostName}";
+      rebuild = "sudo nixos-rebuild switch --flake .#nixos";
       update = "nix flake update";
       clean = "sudo nix-collect-garbage -d";
       generations = "sudo nix-env --list-generations --profile /nix/var/nix/profiles/system";
     };
   };
 }
+
+

@@ -22,6 +22,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Ensure Fish shell is enabled at the system level for user shells set to pkgs.fish
+    programs.fish.enable = true;
+
     # User groups
     users.groups.${cfg.primaryUser} = {
       gid = 1000;

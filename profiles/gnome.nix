@@ -67,7 +67,6 @@ in {
       gnome-settings-daemon.enable = true;
     };
 
-    # Disable usbguard as it can interfere with desktop usage
-    services.usbguard.enable = lib.mkForce false;
+    # usbguard defaults are managed in profiles/security.nix
   };
 }

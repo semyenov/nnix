@@ -29,10 +29,7 @@
     socat
     iperf3
 
-    # Security Tools
-    lynis
-    aide
-    chkrootkit
+    # Security Tools (user-space; system-wide handled in profiles/security.nix)
     age
     sops
     pass
@@ -40,8 +37,6 @@
     gnupg
 
     # Container Management
-    lazydocker
-    dive
     kubectl
     k9s
     helm

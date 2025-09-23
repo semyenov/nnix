@@ -8,6 +8,7 @@
   imports = [
     ../profiles/cli.nix
     ../profiles/common.nix
+    ../profiles/shell.nix
     ../profiles/sysadmin.nix
     ../profiles/development.nix
     ../profiles/productivity.nix

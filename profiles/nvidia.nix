@@ -36,8 +36,8 @@ in
     # NVIDIA driver in xserver config
     services.xserver.videoDrivers = [ "nvidia" ];
 
-    # Kernel parameters
-    boot.kernelParams = [ "quiet" "splash" "nvidia-drm.modeset=1" ];
+    # Kernel parameters specific to NVIDIA; generic params are in optimizations
+    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
     boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
     # Enable redistributable firmware
