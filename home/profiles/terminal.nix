@@ -130,6 +130,49 @@
     cmatrix
   ];
 
+  # Configure Starship for a double-line prompt
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration\n$character";
+      username = {
+        style_user = "blue bold";
+        style_root = "red bold";
+        format = "[$user]($style) ";
+        show_always = true;
+      };
+      hostname = {
+        ssh_only = false;
+        format = "[@$hostname](blue bold) ";
+        trim_at = ".local";
+        style = "green bold";
+      };
+      directory = {
+        style = "cyan bold";
+        truncate_to_repo = false;
+        truncation_length = 3;
+        truncation_symbol = "…/";
+      };
+      character = {
+        success_symbol = "[❯](green bold)";
+        error_symbol = "[✖](red bold)";
+      };
+      git_branch = {
+        format = "[$symbol$branch](purple bold) ";
+        symbol = " ";
+      };
+    };
+  };
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      # Initialize Starship prompt
+      starship init fish | source
+    '';
+  };
+
   home.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "brave";

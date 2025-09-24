@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.modules.nvidia;
+  cfg = config.sozdev.nvidia;
 in
 {
-  options.modules.nvidia = {
+  options.sozdev.nvidia = {
     enable = mkEnableOption "NVIDIA GPU support" // {
       default = true;
     };

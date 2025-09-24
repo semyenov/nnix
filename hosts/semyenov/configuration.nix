@@ -14,22 +14,22 @@
   # settings for stateful data, like file locations and database versions
   # on your system were taken.
 
-  modules.core.enable = true;
-  modules.core.hostName = "semyenov";
-  modules.core.timeZone = "Europe/Moscow";
-  modules.core.locale = "en_US.UTF-8";
+  sozdev.core.enable = true;
+  sozdev.core.hostName = "semyenov";
+  sozdev.core.timeZone = "Europe/Moscow";
+  sozdev.core.locale = "en_US.UTF-8";
 
   # Set domain to make the FQDN "semyenov"
   networking.domain = "local";
 
-  modules.docker.enable = true;
-  modules.docker.enableOnBoot = true;
-  modules.docker.enableNvidia = true;
-  modules.docker.storageDriver = "overlay2";
-  modules.docker.dockerComposePackage = pkgs.docker-compose;
-  modules.docker.users = ["semyenov"];
+  sozdev.docker.enable = true;
+  sozdev.docker.enableOnBoot = true;
+  sozdev.docker.enableNvidia = true;
+  sozdev.docker.storageDriver = "overlay2";
+  sozdev.docker.dockerComposePackage = pkgs.docker-compose;
+  sozdev.docker.users = ["semyenov"];
 
-  modules.gaming.enable = true;
+  sozdev.gaming.enable = true;
 
   # Additional system packages
   environment.systemPackages = with pkgs; [

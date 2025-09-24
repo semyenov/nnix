@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.audio;
+  cfg = config.sozdev.audio;
 in {
-  options.modules.audio = {
+  options.sozdev.audio = {
     enable = mkEnableOption "Audio support with PipeWire" // {
       default = true;
     };

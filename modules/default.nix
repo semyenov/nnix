@@ -14,8 +14,8 @@ with lib; {
     ./gaming.nix
   ];
 
-  # Default module configurations
-  modules = {
+  # Default sozdev configurations
+  sozdev = {
     core.enable = mkDefault true;
     users.enable = mkDefault true;
     audio.enable = mkDefault true;

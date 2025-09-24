@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.docker;
+  cfg = config.sozdev.docker;
 in {
-  options.modules.docker = {
+  options.sozdev.docker = {
     enable = mkEnableOption "Docker container runtime";
 
     enableOnBoot = mkOption {

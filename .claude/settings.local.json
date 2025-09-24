@@ -15,12 +15,14 @@
       "Bash(systemctl:*)",
       "Bash(systemd-analyze:*)",
       "WebFetch(domain:www.cursor.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": [],
     "additionalDirectories": [
       "/home/semyenov/.config"
     ]
-  }
+  },
+  "outputStyle": "Explanatory"
 }

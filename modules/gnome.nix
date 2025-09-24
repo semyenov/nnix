@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.gnome;
+  cfg = config.sozdev.gnome;
 in {
-  options.modules.gnome = {
+  options.sozdev.gnome = {
     enable =
       mkEnableOption "GNOME desktop environment"
       // {

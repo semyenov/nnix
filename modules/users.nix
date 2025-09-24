@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.users;
+  cfg = config.sozdev.users;
 in {
-  options.modules.users = {
+  options.sozdev.users = {
     enable =
       mkEnableOption "User management"
       // {

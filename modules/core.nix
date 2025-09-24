@@ -6,9 +6,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.core;
+  cfg = config.sozdev.core;
 in {
-  options.modules.core = {
+  options.sozdev.core = {
     enable =
       mkEnableOption "Core system configuration"
       // {

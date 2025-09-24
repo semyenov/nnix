@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.fonts;
+  cfg = config.sozdev.fonts;
 in {
-  options.modules.fonts = {
+  options.sozdev.fonts = {
     enable =
       mkEnableOption "Font configuration"
       // {

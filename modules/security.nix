@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.security;
+  cfg = config.sozdev.security;
 in {
-  options.modules.security = {
+  options.sozdev.security = {
     enable =
       mkEnableOption "Enhanced security settings"
       // {

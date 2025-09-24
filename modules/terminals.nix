@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.terminals;
+  cfg = config.sozdev.terminals;
 in {
-  options.modules.terminals = {
+  options.sozdev.terminals = {
     enable =
       mkEnableOption "Terminal emulators"
       // {

@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.gaming;
+  cfg = config.sozdev.gaming;
 in {
-  options.modules.gaming = {
+  options.sozdev.gaming = {
     enable =
       mkEnableOption "Gaming tweaks: Steam, GameMode, MangoHud, 32-bit GL, CS 1.6 ports"
       // {

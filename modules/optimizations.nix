@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.modules.optimizations;
+  cfg = config.sozdev.optimizations;
 in {
-  options.modules.optimizations = {
+  options.sozdev.optimizations = {
     enable =
       mkEnableOption "System performance optimizations"
       // {
