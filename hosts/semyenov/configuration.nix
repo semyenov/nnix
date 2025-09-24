@@ -58,5 +58,34 @@
   # Enable blueman for Bluetooth GUI management
   services.blueman.enable = true;
 
+  # Host-specific passwordless sudo for system management
+  security.sudo.extraRules = [
+    {
+      users = [ "semyenov" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" "NOSETENV" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-collect-garbage";
+          options = [ "NOPASSWD" "NOSETENV" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl";
+          options = [ "NOPASSWD" "NOSETENV" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-env";
+          options = [ "NOPASSWD" "NOSETENV" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-store";
+          options = [ "NOPASSWD" "NOSETENV" ];
+        }
+      ];
+    }
+  ];
+
   system.stateVersion = "25.05";
 }

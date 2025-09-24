@@ -104,5 +104,11 @@ in {
 
     # Essential services
     services.fwupd.enable = true;
+
+    # Command not found handler
+    programs.command-not-found = {
+      enable = true;
+      dbPath = inputs.flake-programs-sqlite.packages.${pkgs.system}.programs-sqlite;
+    };
   };
 }
