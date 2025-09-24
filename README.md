@@ -28,15 +28,11 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │   ├── users/             # User-specific configurations
 │   │   └── semyenov.nix  # User configuration
 │   └── profiles/          # Reusable home-manager profiles
-│       ├── cli.nix        # Modern CLI tools
-│       ├── common.nix     # Common packages (gopass, nekoray)
-│       ├── development.nix # Development tools
-│       ├── music.nix      # Music applications (tauon)
-│       ├── nix.nix        # Nix development tools
-│       ├── productivity.nix # Office and media apps
+│       ├── terminal.nix   # Modern CLI tools and system administration
+│       ├── development.nix # Development tools and Bun.js runtime
+│       ├── productivity.nix # Office, media, music, and proxy tools
 │       ├── shell.nix      # Fish shell and aliases
-│       ├── sysadmin.nix   # System administration tools
-│       └── bun.nix        # Bun.js development environment
+│       └── nix.nix        # Nix development tools
 ├── modules/              # System-level configuration modules
 │   ├── core.nix          # Boot, networking, nix settings
 │   ├── users.nix         # User account management
@@ -122,15 +118,11 @@ Available modules:
 ### Home-Manager Profiles
 
 User profiles are in `home/profiles/`:
-- **cli**: Modern CLI replacements (lsd, bat, ripgrep, etc.)
-- **common**: Common packages (gopass, nekoray)
-- **development**: IDEs, version control, databases
-- **music**: Music applications (tauon)
-- **nix**: Nix development tools (formatters, linters, LSP)
-- **productivity**: Browsers, office suite, media apps
+- **terminal**: Modern CLI tools, system monitoring, networking, security, and infrastructure tools
+- **development**: IDEs, version control, databases, and Bun.js JavaScript runtime
+- **productivity**: Browsers, office suite, media apps, music applications, and proxy tools
 - **shell**: Fish shell configuration with modern aliases
-- **sysadmin**: Monitoring, cloud CLIs, infrastructure tools
-- **bun**: Bun.js development environment with completions
+- **nix**: Nix development tools (formatters, linters, LSP)
 
 ## Common Commands
 

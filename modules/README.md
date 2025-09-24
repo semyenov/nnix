@@ -1,10 +1,10 @@
-# System Profiles
+# System Modules
 
-This directory contains self-contained NixOS system profiles. Each profile is a module with its own options that can be enabled, disabled, and configured independently.
+This directory contains self-contained NixOS system modules. Each module has its own sozdev options that can be enabled, disabled, and configured independently.
 
-## Profile Structure
+## Module Structure
 
-Each profile follows this pattern:
+Each module follows this pattern:
 
 ```nix
 { config, lib, pkgs, ... }:
@@ -12,10 +12,10 @@ Each profile follows this pattern:
 with lib;
 
 let
-  cfg = config.profiles.<name>;
+  cfg = config.sozdev.<name>;
 in
 {
-  options.profiles.<name> = {
+  options.sozdev.<name> = {
     enable = mkEnableOption "Description" // {
       default = true;  # or false
     };
@@ -34,10 +34,10 @@ in
 Essential system configuration including boot, networking, and Nix settings.
 
 **Options:**
-- `profiles.core.enable` - Enable core configuration (default: true)
-- `profiles.core.hostName` - System hostname (default: "nixos")
-- `profiles.core.timeZone` - System timezone (default: "UTC")
-- `profiles.core.locale` - System locale (default: "en_US.UTF-8")
+- `sozdev.core.enable` - Enable core configuration (default: true)
+- `sozdev.core.hostName` - System hostname (default: "nixos")
+- `sozdev.core.timeZone` - System timezone (default: "UTC")
+- `sozdev.core.locale` - System locale (default: "en_US.UTF-8")
 
 **Provides:**
 - Boot loader (systemd-boot)
@@ -50,8 +50,8 @@ Essential system configuration including boot, networking, and Nix settings.
 User account configuration.
 
 **Options:**
-- `profiles.users.enable` - Enable user management (default: true)
-- `profiles.users.primaryUser` - Primary user name (default: "semyenov")
+- `sozdev.users.enable` - Enable user management (default: true)
+- `sozdev.users.primaryUser` - Primary user name (default: "semyenov")
 
 **Provides:**
 - User account with sudo privileges
@@ -62,8 +62,8 @@ User account configuration.
 PipeWire audio system configuration.
 
 **Options:**
-- `profiles.audio.enable` - Enable audio support (default: true)
-- `profiles.audio.enableJack` - Enable JACK support (default: true)
+- `sozdev.audio.enable` - Enable audio support (default: true)
+- `sozdev.audio.enableJack` - Enable JACK support (default: true)
 
 **Provides:**
 - PipeWire with PulseAudio/ALSA/JACK compatibility
@@ -74,8 +74,8 @@ PipeWire audio system configuration.
 System font configuration.
 
 **Options:**
-- `profiles.fonts.enable` - Enable font configuration (default: true)
-- `profiles.fonts.nerdFonts` - List of Nerd Fonts to install (default: ["RecursiveMono"])
+- `sozdev.fonts.enable` - Enable font configuration (default: true)
+- `sozdev.fonts.nerdFonts` - List of Nerd Fonts to install (default: ["RecursiveMono"])
 
 **Provides:**
 - Nerd Fonts for terminal icons
@@ -87,7 +87,7 @@ System font configuration.
 Terminal emulator applications.
 
 **Options:**
-- `profiles.terminals.enable` - Enable terminal emulators (default: true)
+- `sozdev.terminals.enable` - Enable terminal emulators (default: true)
 
 **Provides:**
 - Alacritty - GPU-accelerated terminal
@@ -98,8 +98,8 @@ Terminal emulator applications.
 GNOME desktop environment.
 
 **Options:**
-- `profiles.gnome.enable` - Enable GNOME desktop (default: true)
-- `profiles.gnome.wayland` - Enable Wayland support (default: true)
+- `sozdev.gnome.enable` - Enable GNOME desktop (default: true)
+- `sozdev.gnome.wayland` - Enable Wayland support (default: true)
 
 **Provides:**
 - GNOME desktop environment
@@ -113,10 +113,10 @@ GNOME desktop environment.
 NVIDIA GPU driver configuration.
 
 **Options:**
-- `profiles.nvidia.enable` - Enable NVIDIA support (default: true)
-- `profiles.nvidia.prime.enable` - Enable PRIME offloading (default: true)
-- `profiles.nvidia.prime.intelBusId` - Intel GPU PCI bus ID (default: "PCI:0:2:0")
-- `profiles.nvidia.prime.nvidiaBusId` - NVIDIA GPU PCI bus ID (default: "PCI:1:0:0")
+- `sozdev.nvidia.enable` - Enable NVIDIA support (default: true)
+- `sozdev.nvidia.prime.enable` - Enable PRIME offloading (default: true)
+- `sozdev.nvidia.prime.intelBusId` - Intel GPU PCI bus ID (default: "PCI:0:2:0")
+- `sozdev.nvidia.prime.nvidiaBusId` - NVIDIA GPU PCI bus ID (default: "PCI:1:0:0")
 
 **Provides:**
 - NVIDIA proprietary drivers
@@ -128,12 +128,12 @@ NVIDIA GPU driver configuration.
 Docker container runtime.
 
 **Options:**
-- `profiles.docker.enable` - Enable Docker (default: false)
-- `profiles.docker.enableOnBoot` - Start Docker on boot (default: true)
-- `profiles.docker.enableNvidia` - Enable NVIDIA GPU support (default: true)
-- `profiles.docker.storageDriver` - Storage driver (default: "overlay2")
-- `profiles.docker.dockerComposePackage` - Docker Compose package to use
-- `profiles.docker.users` - Users to add to docker group (default: ["semyenov"])
+- `sozdev.docker.enable` - Enable Docker (default: false)
+- `sozdev.docker.enableOnBoot` - Start Docker on boot (default: true)
+- `sozdev.docker.enableNvidia` - Enable NVIDIA GPU support (default: true)
+- `sozdev.docker.storageDriver` - Storage driver (default: "overlay2")
+- `sozdev.docker.dockerComposePackage` - Docker Compose package to use
+- `sozdev.docker.users` - Users to add to docker group (default: ["semyenov"])
 
 **Provides:**
 - Docker daemon with experimental features
@@ -147,10 +147,10 @@ Docker container runtime.
 Comprehensive security configuration.
 
 **Options:**
-- `profiles.security.enable` - Enable security hardening (default: true)
-- `profiles.security.enableFirewall` - Enable firewall (default: true)
-- `profiles.security.enableAppArmor` - Enable AppArmor (default: false)
-- `profiles.security.sshHardening` - Apply SSH hardening (default: true)
+- `sozdev.security.enable` - Enable security hardening (default: true)
+- `sozdev.security.enableFirewall` - Enable firewall (default: true)
+- `sozdev.security.enableAppArmor` - Enable AppArmor (default: false)
+- `sozdev.security.sshHardening` - Apply SSH hardening (default: true)
 
 **Provides:**
 - Kernel hardening (sysctl parameters)
@@ -165,7 +165,7 @@ Comprehensive security configuration.
 System performance tuning (toggleable).
 
 **Options:**
-- `profiles.optimizations.enable` - Enable performance optimizations (default: true via `profiles/default.nix`)
+- `sozdev.optimizations.enable` - Enable performance optimizations (default: true via `modules/default.nix`)
 
 **Provides:**
 - ZRAM swap compression (25% of RAM)
@@ -181,9 +181,9 @@ System performance tuning (toggleable).
 Gaming tweaks and tooling.
 
 **Options:**
-- `profiles.gaming.enable` - Enable gaming stack (default: false)
-- `profiles.gaming.openCSPorts` - Open common CS 1.6 ports (default: false)
-- `profiles.gaming.steamPackage` - Steam package to use (default: `pkgs.steam`)
+- `sozdev.gaming.enable` - Enable gaming stack (default: false)
+- `sozdev.gaming.openCSPorts` - Open common CS 1.6 ports (default: false)
+- `sozdev.gaming.steamPackage` - Steam package to use (default: `pkgs.steam`)
 
 **Provides:**
 - 32-bit graphics and Vulkan support
@@ -204,7 +204,7 @@ Import all profiles with defaults:
 {
   imports = [
     ./hardware-configuration.nix
-    ../../profiles  # Imports profiles/default.nix
+    ../../modules  # Imports modules/default.nix
   ];
 }
 ```
@@ -216,15 +216,15 @@ Override profile settings in your host configuration:
 ```nix
 {
   # Disable specific profiles
-  profiles.docker.enable = false;
+  sozdev.docker.enable = false;
 
   # Configure profile options
-  profiles.core = {
+  sozdev.core = {
     hostName = "semyenov";
     timeZone = "Europe/Moscow";
   };
 
-  profiles.nvidia.prime = {
+  sozdev.nvidia.prime = {
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:2:0:0";
   };
@@ -242,10 +242,10 @@ Override profile settings in your host configuration:
 with lib;
 
 let
-  cfg = config.profiles.myprofile;
+  cfg = config.sozdev.myprofile;
 in
 {
-  options.profiles.myprofile = {
+  options.sozdev.myprofile = {
     enable = mkEnableOption "My custom profile";
 
     someOption = mkOption {
@@ -261,7 +261,7 @@ in
 }
 ```
 
-2. Add it to `profiles/default.nix`:
+2. Add it to `modules/default.nix`:
 
 ```nix
 {
@@ -270,7 +270,7 @@ in
     ./myprofile.nix
   ];
 
-  profiles.myprofile.enable = true;  # or false for opt-in
+  sozdev.myprofile.enable = true;  # or false for opt-in
 }
 ```
 

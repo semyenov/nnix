@@ -256,8 +256,8 @@ Quick commands:
 
 ### To modify user configuration:
 1. Edit `home/users/semyenov.nix` for user-specific settings
-2. Modify `home/profiles/desktop.nix` for desktop applications
-3. Modify `home/profiles/sysadmin.nix` for system tools
+2. Modify `home/profiles/productivity.nix` for desktop applications
+3. Modify `home/profiles/terminal.nix` for system tools
 4. Changes apply on next rebuild
 
 ### To use system modules:
