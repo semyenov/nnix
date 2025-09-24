@@ -14,8 +14,8 @@ with lib; {
     ./gaming.nix
   ];
 
-  # Default profile configurations
-  profiles = {
+  # Default module configurations
+  modules = {
     core.enable = mkDefault true;
     users.enable = mkDefault true;
     audio.enable = mkDefault true;

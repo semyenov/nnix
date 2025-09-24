@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.users;
+  cfg = config.modules.users;
 in {
-  options.profiles.users = {
+  options.modules.users = {
     enable =
       mkEnableOption "User management"
       // {

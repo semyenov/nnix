@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.security;
+  cfg = config.modules.security;
 in {
-  options.profiles.security = {
+  options.modules.security = {
     enable =
       mkEnableOption "Enhanced security settings"
       // {

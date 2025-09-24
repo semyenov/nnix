@@ -7,29 +7,29 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../profiles
+    ../../modules
   ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken.
 
-  profiles.core.enable = true;
-  profiles.core.hostName = "semyenov";
-  profiles.core.timeZone = "Europe/Moscow";
-  profiles.core.locale = "en_US.UTF-8";
+  modules.core.enable = true;
+  modules.core.hostName = "semyenov";
+  modules.core.timeZone = "Europe/Moscow";
+  modules.core.locale = "en_US.UTF-8";
 
   # Set domain to make the FQDN "semyenov"
   networking.domain = "local";
 
-  profiles.docker.enable = true;
-  profiles.docker.enableOnBoot = true;
-  profiles.docker.enableNvidia = true;
-  profiles.docker.storageDriver = "overlay2";
-  profiles.docker.dockerComposePackage = pkgs.docker-compose;
-  profiles.docker.users = ["semyenov"];
+  modules.docker.enable = true;
+  modules.docker.enableOnBoot = true;
+  modules.docker.enableNvidia = true;
+  modules.docker.storageDriver = "overlay2";
+  modules.docker.dockerComposePackage = pkgs.docker-compose;
+  modules.docker.users = ["semyenov"];
 
-  profiles.gaming.enable = true;
+  modules.gaming.enable = true;
 
   # Additional system packages
   environment.systemPackages = with pkgs; [

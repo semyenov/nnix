@@ -25,6 +25,11 @@
     gimp
     inkscape
     obs-studio
+    unstable.tauon  # Music player
+
+    # Proxy Tools
+    nekoray
+    throne
 
     # System Utilities
     dconf

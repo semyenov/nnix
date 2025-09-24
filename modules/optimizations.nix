@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.optimizations;
+  cfg = config.modules.optimizations;
 in {
-  options.profiles.optimizations = {
+  options.modules.optimizations = {
     enable =
       mkEnableOption "System performance optimizations"
       // {

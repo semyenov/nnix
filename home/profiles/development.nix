@@ -31,6 +31,9 @@
     mycli
     litecli
 
+    # JavaScript/TypeScript Development
+    unstable.bun  # Fast all-in-one JavaScript runtime & toolkit
+
     # Debugging & Profiling
     gdb
     valgrind
@@ -44,5 +47,22 @@
 
     # Code Analysis
     scc
+  ];
+
+  # Bun shell completions
+  programs.fish.shellInit = lib.mkAfter ''
+    if command -v bun >/dev/null
+      bun completions fish | source
+    end
+  '';
+
+  # Environment variables for Bun
+  home.sessionVariables = {
+    BUN_INSTALL = "$HOME/.bun";
+  };
+
+  # Add .bun/bin to PATH
+  home.sessionPath = [
+    "$HOME/.bun/bin"
   ];
 }

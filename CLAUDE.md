@@ -80,6 +80,7 @@ deadnix
 
 # Build custom packages
 nix build .#packages.x86_64-linux.cursor-appimage
+nix build .#packages.x86_64-linux.throne
 
 # Show all available outputs
 nix flake show --all-systems
@@ -140,8 +141,9 @@ nix search nixpkgs <package-name>
     - `productivity.nix`: Browsers, office, media applications
     - `shell.nix`: Fish shell configuration with modern aliases
     - `sysadmin.nix`: System administration and monitoring tools
+    - `bun.nix`: Bun.js development profile for modern JavaScript/TypeScript development
 
-- **profiles/**: System-level configuration profiles (self-contained with options)
+- **modules/**: System-level configuration modules (self-contained with sozdev options)
   - `core.nix`: Boot, networking, nix settings, shell aliases
   - `users.nix`: User account management
   - `audio.nix`: PipeWire audio configuration
@@ -152,10 +154,12 @@ nix search nixpkgs <package-name>
   - `docker.nix`: Docker container runtime with all options
   - `security.nix`: Complete security hardening
   - `optimizations.nix`: System performance optimizations
-  - `default.nix`: Imports all profiles with sensible defaults
+  - `gaming.nix`: Gaming profile with Steam and performance tools
+  - `default.nix`: Imports all modules with sensible defaults
 
 - **packages/**: Custom package definitions
   - `cursor-appimage.nix`: Cursor editor AppImage
+  - `throne.nix`: Throne proxy utility (cross-platform GUI proxy powered by sing-box)
 
 - **overlays/**: Package overlays
   - Provides unstable packages via `unstable.<package>`
@@ -183,11 +187,12 @@ nix search nixpkgs <package-name>
    - Security: Comprehensive hardening with configurable options
    - Development: Full Nix development shell
 
-4. **Profile System**:
-   - Each profile is self-contained with its own options
-   - Profiles can be toggled via `profiles.<name>.enable`
-   - Default configuration in `profiles/default.nix`
+4. **Module System**:
+   - Each module is self-contained with its own sozdev options
+   - Modules can be toggled via `sozdev.<name>.enable`
+   - Default configuration in `modules/default.nix`
    - Clean separation between system and user profiles
+   - Uses `sozdev` namespace for organized configuration
 
 ### Important Configuration Details
 - **Host Name**: "semyenov"
@@ -207,8 +212,10 @@ nix search nixpkgs <package-name>
 - **Additional Features**:
   - Bluetooth with experimental features enabled
   - WSDD service for Windows network discovery
-  - Gaming profile enabled with Steam and performance tools
+  - Gaming module enabled with Steam and performance tools
   - Docker with NVIDIA GPU support
+  - Bun.js development environment
+  - Custom throne proxy utility package
 
 ### Shell Aliases (Home Manager)
 Modern CLI tool replacements are aliased in Fish shell:
@@ -253,13 +260,13 @@ Quick commands:
 3. Modify `home/profiles/sysadmin.nix` for system tools
 4. Changes apply on next rebuild
 
-### To use system profiles:
-Profiles are imported via `profiles/default.nix` in `hosts/default/configuration.nix`:
-- All profiles imported automatically with sensible defaults
-- Toggle profiles: `profiles.<name>.enable = false;` in host configuration
-- Configure profile options: `profiles.<name>.<option> = value;`
-- Each profile is self-contained with its own NixOS options
-- Active profiles: core, users, audio, fonts, terminals, gnome, nvidia, docker, security, optimizations
+### To use system modules:
+Modules are imported via `modules/default.nix` in `hosts/semyenov/configuration.nix`:
+- All modules imported automatically with sensible defaults
+- Toggle modules: `sozdev.<name>.enable = false;` in host configuration
+- Configure module options: `sozdev.<name>.<option> = value;`
+- Each module is self-contained with its own sozdev NixOS options
+- Active modules: core, users, audio, fonts, terminals, gnome, nvidia, docker, security, optimizations, gaming
 
 ### Claude Code Permissions
 This repository has pre-configured Claude Code permissions in `.claude/settings.local.json`:

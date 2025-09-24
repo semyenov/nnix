@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.gnome;
+  cfg = config.modules.gnome;
 in {
-  options.profiles.gnome = {
+  options.modules.gnome = {
     enable =
       mkEnableOption "GNOME desktop environment"
       // {
@@ -67,6 +67,6 @@ in {
       gnome-settings-daemon.enable = true;
     };
 
-    # usbguard defaults are managed in profiles/security.nix
+    # usbguard defaults are managed in modules/security.nix
   };
 }

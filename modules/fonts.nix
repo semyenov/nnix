@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.fonts;
+  cfg = config.modules.fonts;
 in {
-  options.profiles.fonts = {
+  options.modules.fonts = {
     enable =
       mkEnableOption "Font configuration"
       // {

@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.terminals;
+  cfg = config.modules.terminals;
 in {
-  options.profiles.terminals = {
+  options.modules.terminals = {
     enable =
       mkEnableOption "Terminal emulators"
       // {

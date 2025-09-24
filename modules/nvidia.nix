@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.profiles.nvidia;
+  cfg = config.modules.nvidia;
 in
 {
-  options.profiles.nvidia = {
+  options.modules.nvidia = {
     enable = mkEnableOption "NVIDIA GPU support" // {
       default = true;
     };

@@ -6,9 +6,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.core;
+  cfg = config.modules.core;
 in {
-  options.profiles.core = {
+  options.modules.core = {
     enable =
       mkEnableOption "Core system configuration"
       // {

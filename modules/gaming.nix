@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.gaming;
+  cfg = config.modules.gaming;
 in {
-  options.profiles.gaming = {
+  options.modules.gaming = {
     enable =
       mkEnableOption "Gaming tweaks: Steam, GameMode, MangoHud, 32-bit GL, CS 1.6 ports"
       // {

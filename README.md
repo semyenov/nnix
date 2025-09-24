@@ -5,12 +5,14 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 ## Features
 
 - **Flake-based Configuration**: Pure, reproducible system configuration
-- **Domain-Organized Structure**: Clear separation of concerns with self-contained profiles
+- **Domain-Organized Structure**: Clear separation of concerns with self-contained modules
 - **Home Manager Integration**: Declarative user environment management
-- **Configurable Profiles**: Each profile has its own NixOS options
-- **Security Hardening**: Comprehensive security profile with configurable options
+- **Configurable Modules**: Each module has its own sozdev NixOS options
+- **Security Hardening**: Comprehensive security module with configurable options
 - **Modern CLI Tools**: Latest terminal utilities and productivity tools
 - **Development Ready**: Pre-configured IDEs and development environments
+- **Custom Packages**: Cursor IDE and Throne proxy utility
+- **Modern JavaScript**: Bun.js runtime for fast JavaScript/TypeScript development
 
 ## Structure
 
@@ -20,7 +22,7 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 ├── flake.lock               # Lock file for reproducible builds
 ├── hosts/                   # Host-specific configurations
 │   └── semyenov/           # This host configuration
-│       ├── configuration.nix # Host config (imports profiles)
+│       ├── configuration.nix # Host config (imports modules)
 │       └── hardware-configuration.nix # Hardware-specific settings
 ├── home/                   # Home-manager configurations
 │   ├── users/             # User-specific configurations
@@ -33,8 +35,9 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │       ├── nix.nix        # Nix development tools
 │       ├── productivity.nix # Office and media apps
 │       ├── shell.nix      # Fish shell and aliases
-│       └── sysadmin.nix   # System administration tools
-├── profiles/              # System-level configuration profiles
+│       ├── sysadmin.nix   # System administration tools
+│       └── bun.nix        # Bun.js development environment
+├── modules/              # System-level configuration modules
 │   ├── core.nix          # Boot, networking, nix settings
 │   ├── users.nix         # User account management
 │   ├── audio.nix         # PipeWire audio configuration
@@ -45,10 +48,12 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │   ├── docker.nix        # Docker container runtime
 │   ├── security.nix      # Security hardening
 │   ├── optimizations.nix # Performance tuning
-│   └── default.nix       # Imports all profiles with defaults
-├── overlays/             # Package overlays
-└── packages/            # Custom package definitions
-    └── cursor-appimage.nix # Cursor editor
+│   ├── gaming.nix        # Gaming with Steam and performance tools
+│   └── default.nix       # Imports all modules with defaults
+├── packages/            # Custom package definitions
+│   ├── cursor-appimage.nix # Cursor editor AppImage
+│   └── throne.nix      # Throne proxy utility
+└── overlays/            # Package overlays
 ```
 
 ## Quick Start
@@ -71,10 +76,10 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
    sudo nixos-generate-config --show-hardware-config > hosts/semyenov/hardware-configuration.nix
    ```
 
-3. **Customize profiles** (optional):
-   - Edit `profiles/core.nix` to change hostname, timezone, locale
-   - Edit `profiles/users.nix` to change primary user
-   - Toggle profiles in `profiles/default.nix`
+3. **Customize modules** (optional):
+   - Edit `modules/core.nix` to change hostname, timezone, locale
+   - Edit `modules/users.nix` to change primary user
+   - Toggle modules in `modules/default.nix`
 
 4. **Build and switch**:
    ```bash
@@ -82,26 +87,26 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
    sudo nixos-rebuild switch --flake .#semyenov
    ```
 
-## Profile System
+## Module System
 
-### System Profiles
+### System Modules
 
-All system profiles are in `profiles/` and are self-contained with their own options:
+All system modules are in `modules/` and are self-contained with their own sozdev options:
 
 ```nix
-# Example: Disable a profile
-profiles.docker.enable = false;
+# Example: Disable a module
+sozdev.docker.enable = false;
 
-# Example: Configure profile options
-profiles.nvidia.prime.intelBusId = "PCI:0:2:0";
-profiles.nvidia.prime.nvidiaBusId = "PCI:1:0:0";
+# Example: Configure module options
+sozdev.nvidia.prime.intelBusId = "PCI:0:2:0";
+sozdev.nvidia.prime.nvidiaBusId = "PCI:1:0:0";
 
 # Example: Security options
-profiles.security.enableAppArmor = true;
-profiles.security.sshHardening = false;
+sozdev.security.enableAppArmor = true;
+sozdev.security.sshHardening = false;
 ```
 
-Available profiles:
+Available modules:
 - **core**: Essential system configuration (boot, networking, nix)
 - **users**: User account management
 - **audio**: PipeWire audio with optional JACK support
@@ -112,7 +117,7 @@ Available profiles:
 - **docker**: Docker container runtime with NVIDIA support
 - **security**: Comprehensive security hardening
 - **optimizations**: Performance tuning and optimizations
-- **gaming**: Gaming stack with Steam and performance tools (default: disabled)
+- **gaming**: Gaming stack with Steam and performance tools
 
 ### Home-Manager Profiles
 
@@ -125,6 +130,7 @@ User profiles are in `home/profiles/`:
 - **productivity**: Browsers, office suite, media apps
 - **shell**: Fish shell configuration with modern aliases
 - **sysadmin**: Monitoring, cloud CLIs, infrastructure tools
+- **bun**: Bun.js development environment with completions
 
 ## Common Commands
 
@@ -181,7 +187,7 @@ nix-store --optimise
 
 ## Current Host Configuration
 
-The `semyenov` host includes additional configuration beyond the base profiles:
+The `semyenov` host includes additional configuration beyond the base modules:
 
 - **Timezone**: Europe/Moscow
 - **Network Domain**: semyenov.local
@@ -204,19 +210,19 @@ The `semyenov` host includes additional configuration beyond the base profiles:
    cp hosts/semyenov/*.nix hosts/laptop/
    ```
 
-3. Customize profile options in the new host configuration:
+3. Customize module options in the new host configuration:
    ```nix
    # hosts/laptop/configuration.nix
    {
      imports = [
        ./hardware-configuration.nix
-       ../../profiles
+       ../../modules
      ];
 
-     # Customize profiles for this host
-     profiles.core.hostName = "laptop";
-     profiles.nvidia.enable = false;  # No NVIDIA GPU
-     profiles.optimizations.enable = true;
+     # Customize modules for this host
+     sozdev.core.hostName = "laptop";
+     sozdev.nvidia.enable = false;  # No NVIDIA GPU
+     sozdev.optimizations.enable = true;
    }
    ```
 
@@ -229,29 +235,29 @@ The `semyenov` host includes additional configuration beyond the base profiles:
    };
    ```
 
-### Customizing Profiles
+### Customizing Modules
 
-Each profile can be configured via options:
+Each module can be configured via sozdev options:
 
 ```nix
 # In your host configuration
 {
   # Core settings
-  profiles.core = {
+  sozdev.core = {
     hostName = "myhost";
     timeZone = "America/New_York";
     locale = "en_US.UTF-8";
   };
 
   # Docker with specific users
-  profiles.docker = {
+  sozdev.docker = {
     enable = true;
     enableNvidia = false;  # No GPU support needed
     users = [ "alice" "bob" ];
   };
 
   # Security with custom settings
-  profiles.security = {
+  sozdev.security = {
     enable = true;
     enableFirewall = true;
     enableAppArmor = false;
@@ -311,7 +317,7 @@ nix flake check
 
 ### Performance Optimization
 
-The `optimizations.nix` profile (enabled by default in `profiles/default.nix`) includes:
+The `optimizations.nix` module (enabled by default in `modules/default.nix`) includes:
 - ZRAM swap compression
 - Kernel performance tuning
 - SystemD optimization
@@ -321,12 +327,12 @@ The `optimizations.nix` profile (enabled by default in `profiles/default.nix`) i
 
 Disable it per host if needed:
 ```nix
-profiles.optimizations.enable = false;
+sozdev.optimizations.enable = false;
 ```
 
 ### Security Hardening
 
-The `security.nix` profile provides:
+The `security.nix` module provides:
 - Kernel hardening with sysctl tweaks
 - SSH hardening with strong crypto
 - Fail2ban for brute force protection
@@ -360,10 +366,10 @@ sudo nix-store --optimise
 sudo nix-env --delete-generations 7d --profile /nix/var/nix/profiles/system
 ```
 
-### Profile Conflicts
+### Module Conflicts
 
-If profiles conflict, you can:
-1. Disable conflicting profiles in `profiles/default.nix`
+If modules conflict, you can:
+1. Disable conflicting modules in `modules/default.nix`
 2. Override settings in your host configuration
 3. Use `mkForce` to override values:
    ```nix

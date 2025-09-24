@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.profiles.docker;
+  cfg = config.modules.docker;
 in {
-  options.profiles.docker = {
+  options.modules.docker = {
     enable = mkEnableOption "Docker container runtime";
 
     enableOnBoot = mkOption {

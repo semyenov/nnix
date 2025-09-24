@@ -51,6 +51,29 @@
     visidata
     silicon
 
+    # Monitoring & Performance
+    htop
+    iotop-c
+    nethogs
+    iftop
+    bmon
+    glances
+    sysstat
+    lsof
+    bandwhich
+    trippy
+
+    # Network Tools
+    nmap
+    tcpdump
+    mtr
+    traceroute
+    dig
+    whois
+    netcat-gnu
+    socat
+    iperf3
+
     # System Information
     neofetch
     onefetch
@@ -60,6 +83,40 @@
     usbutils
     dmidecode
     smartmontools
+
+    # Security Tools
+    age
+    sops
+    pass
+    pwgen
+    gnupg
+
+    # Container Management
+    kubectl
+    k9s
+    helm
+    lazydocker
+    dive
+
+    # Infrastructure as Code
+    terraform
+    ansible
+    vault
+
+    # Cloud CLIs
+    awscli2
+    google-cloud-sdk
+    azure-cli
+
+    # Backup Tools
+    restic
+    borgbackup
+    rclone
+    rsync
+
+    # Log Analysis
+    lnav
+    multitail
 
     # Archives
     p7zip
