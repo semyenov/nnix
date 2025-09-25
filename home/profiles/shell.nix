@@ -17,6 +17,11 @@
       set -gx SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent >/dev/null 2>/dev/null
       gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null
+
+      # Initialize zoxide for smarter cd
+      if command -v zoxide >/dev/null
+        zoxide init fish | source
+      end
     '';
 
     shellAliases = {

@@ -14,6 +14,9 @@
     zellij
     navi
     vivid
+    zoxide # Smarter cd command that learns your habits
+    fzf # Command-line fuzzy finder
+    skim # Rust alternative to fzf
 
     # Modern CLI Replacements
     lsd
@@ -29,6 +32,9 @@
     dog
     sd
     miller
+    sad # CLI search and replace tool
+    choose # Human-friendly alternative to cut
+    hexyl # Command-line hex viewer
 
     # File Management
     broot
@@ -37,6 +43,9 @@
     mc
     ncdu
     dua
+    tree
+    yazi # Blazing fast terminal file manager with image preview
+    ouch # Painless compression and decompression tool
 
     # Terminal Utilities
     tmux
@@ -44,12 +53,16 @@
     mosh
     asciinema
     expect
+    gum # Fancy terminal UI components for shell scripts
+    glow # Render markdown on the CLI with style
+    slides # Terminal-based presentation tool
 
     # Data Processing
     jq
     yq
     visidata
     silicon
+    tokei # Count lines of code quickly
 
     # Monitoring & Performance
     htop
@@ -62,6 +75,7 @@
     lsof
     bandwhich
     trippy
+    gping # Ping, but with a graph
 
     # Network Tools
     nmap
@@ -84,6 +98,12 @@
     dmidecode
     smartmontools
 
+    # Task Running & Development
+    just # Command runner for project-specific tasks
+    watchexec # Execute commands when files change
+    entr # Run arbitrary commands when files change
+    portal # Quick file transfers between computers
+
     # Security Tools
     age
     sops
@@ -97,6 +117,7 @@
     helm
     lazydocker
     dive
+    oxker # Simple TUI to view & control docker containers
 
     # Infrastructure as Code
     terraform
@@ -129,41 +150,6 @@
     lolcat
     cmatrix
   ];
-
-  # Configure Starship for a double-line prompt
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = true;
-    settings = {
-      format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration\n$character";
-      username = {
-        style_user = "blue bold";
-        style_root = "red bold";
-        format = "[$user]($style) ";
-        show_always = true;
-      };
-      hostname = {
-        ssh_only = false;
-        format = "[@$hostname](blue bold) ";
-        trim_at = ".local";
-        style = "green bold";
-      };
-      directory = {
-        style = "cyan bold";
-        truncate_to_repo = false;
-        truncation_length = 3;
-        truncation_symbol = "…/";
-      };
-      character = {
-        success_symbol = "[❯](green bold)";
-        error_symbol = "[✖](red bold)";
-      };
-      git_branch = {
-        format = "[$symbol$branch](purple bold) ";
-        symbol = " ";
-      };
-    };
-  };
 
   programs.fish = {
     enable = true;

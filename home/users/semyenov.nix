@@ -8,6 +8,7 @@
   imports = [
     ../profiles/terminal.nix
     ../profiles/shell.nix
+    ../profiles/starship.nix
     ../profiles/nix.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
