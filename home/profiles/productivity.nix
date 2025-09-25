@@ -22,17 +22,15 @@
     # Media
     vlc
     spotify
-    gimp
-    inkscape
     obs-studio
-    unstable.tauon  # Music player
+    unstable.tauon # Music player
 
     # Proxy Tools
-    nekoray
     throne
 
     # System Utilities
     dconf
     gnome-tweaks
+    adw-gtk3 # For legacy GNOME apps
   ];
 }

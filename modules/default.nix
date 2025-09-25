@@ -12,6 +12,7 @@ with lib; {
     ./security.nix
     ./optimizations.nix
     ./gaming.nix
+    ./wifi-hotspot.nix
   ];
 
   # Default sozdev configurations
@@ -27,5 +28,6 @@ with lib; {
     security.enable = mkDefault true;
     optimizations.enable = mkDefault true;
     gaming.enable = mkDefault false;
+    wifi-hotspot.enable = mkDefault false;
   };
 }
