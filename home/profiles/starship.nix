@@ -92,6 +92,7 @@
         # System monitoring
         "$memory_usage"
         "$battery"
+        "$disk"
 
         # Command execution
         "$cmd_duration"
@@ -108,10 +109,11 @@
       # Add a blank line at the start of the prompt
       add_newline = true;
 
-      # Performance optimizations
-      scan_timeout = 30;
-      command_timeout = 500;
-      right_format = ""; # Disable right prompt for better performance
+      # Performance optimizations - enhanced for better responsiveness
+      scan_timeout = 20; # Reduced for faster startup
+      command_timeout = 300; # Reduced for better responsiveness
+      right_format = "$time"; # Enable right prompt for time
+      continuation_prompt = "▶ "; # Better continuation prompt
 
       # Palette for consistent colors
       palette = "catppuccin_mocha";
@@ -145,7 +147,7 @@
         crust = "#11111b";
       };
 
-      # Character module - enhanced prompt symbols
+      # Character module - enhanced prompt symbols with better visual hierarchy
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
@@ -183,14 +185,19 @@
         read_only_style = "red";
         home_symbol = "󰋜 ";
         fish_style_pwd_dir_length = 1;
+        # Enhanced substitutions with more comprehensive coverage
         substitutions = {
           "Documents" = "󰈙 ";
           "Downloads" = "󰈙 ";
           "Music" = "󰎈 ";
           "Pictures" = "󰈙 ";
+          "Videos" = "󰈙 ";
           "Developer" = "󰲋 ";
           "Projects" = "󰏗 ";
+          "Code" = "󰌠 ";
+          "src" = "󰌠 ";
           ".config" = "󰈙 ";
+          ".local" = "󰋜 ";
           "~" = "󰋜 ";
           "nn" = "󰌠 ";
           "home" = "󰋜 ";
@@ -203,6 +210,16 @@
           "dev" = "󰋚 ";
           "proc" = "󰌠 ";
           "sys" = "󰒓 ";
+          "mnt" = "󰋚 ";
+          "media" = "󰋚 ";
+          "srv" = "󰏗 ";
+          "run" = "󰌠 ";
+          "lib" = "󰘳 ";
+          "lib64" = "󰘳 ";
+          "sbin" = "󰘳 ";
+          "root" = "󰌠 ";
+          "nix" = "󰌠 ";
+          "nixos" = "󰌠 ";
         };
       };
 
@@ -235,6 +252,9 @@
         deleted = "✘";
         typechanged = "󰉄";
         disabled = false;
+        # Enhanced configuration for better UX
+        show_untracked = true;
+        show_stashed = true;
       };
 
       # Git commit module
@@ -301,6 +321,9 @@
         unknown_msg = "[unknown](bold yellow)";
         disabled = false;
         heuristic = true; # Enable heuristic for better detection
+        # Enhanced NixOS integration
+        detect_files = ["flake.nix" "shell.nix" "default.nix"];
+        detect_folders = [".nix-shell"];
       };
 
       # Docker context
@@ -346,12 +369,12 @@
         disabled = true; # Enable if on laptop
       };
 
-      # Time module
+      # Time module - enhanced with better formatting
       time = {
         style = "bold bright-white";
         format = "at [$time]($style) ";
-        time_format = "%T";
-        disabled = true; # Enable if you want time in prompt
+        time_format = "%H:%M:%S";
+        disabled = false; # Enable for right prompt
         use_12hr = false;
       };
 
@@ -362,6 +385,15 @@
         symbol = "󰍛 ";
         threshold = 85; # Only show when memory usage is high
         disabled = true; # Disable by default for better performance
+      };
+
+      # Disk usage module - new addition for system monitoring
+      disk = {
+        style = "bold yellow";
+        format = "on [$symbol$path]($style) ";
+        symbol = "󰋊 ";
+        threshold = 90; # Only show when disk usage is high
+        disabled = true; # Enable if you want disk monitoring
       };
 
       # Shell level module
@@ -379,7 +411,7 @@
         style = "bold red";
         format = "[$symbol$status]($style) ";
         symbol = "✖ ";
-        success_symbol = "";
+        success_symbol = "󰅤 "; # Nerd Font check circle
         not_executable_symbol = "🚫";
         not_found_symbol = "🔍";
         sigint_symbol = "🧱";
@@ -435,7 +467,7 @@
       java = {
         style = "bold red";
         format = "via [$symbol($version )]($style)";
-        symbol = " ";
+        symbol = "󰌠 "; # Nerd Font Java icon
         detect_extensions = ["java" "class" "jar" "gradle" "clj" "cljc"];
         detect_files = ["pom.xml" "build.gradle.kts" "build.sbt" ".java-version" ".deps.edn" "project.clj" "build.boot" ".sdkmanrc"];
         detect_folders = [];
@@ -456,7 +488,7 @@
       c = {
         style = "149 bold";
         format = "via [$symbol($version(-$name) )]($style)";
-        symbol = " ";
+        symbol = "󰙱 "; # Nerd Font C++ icon
         detect_extensions = ["c" "h"];
         detect_files = [];
         detect_folders = [];
@@ -489,40 +521,40 @@
         format = "[$symbol]($style) ";
         disabled = false; # Enable to show OS icon
         symbols = {
-          Alpine = "";
-          AlmaLinux = "";
-          Android = "";
-          Arch = "";
-          CentOS = "";
-          Debian = "";
-          EndeavourOS = "";
-          Fedora = "";
-          Illumos = "";
-          Kali = "";
-          Linux = "";
-          Macos = "";
-          Manjaro = "";
-          Mariner = "";
-          Mint = "";
-          NetBSD = "";
-          NixOS = "󰌠 ";
-          OpenBSD = "";
-          openEuler = "";
-          openSUSE = "";
-          OracleLinux = "";
-          Pop = "";
-          Raspbian = "";
-          Redhat = "󱄛 ";
-          RedHatEnterprise = "󱄛 ";
-          RockyLinux = "";
-          Redox = "🧪 ";
-          Solus = "";
-          SUSE = "";
-          Ubuntu = "";
-          Ultramarine = "";
-          Unknown = "";
-          Void = "";
-          Windows = "";
+          Alpine = "󰒳 "; # Nerd Font Alpine
+          AlmaLinux = "󰌠 "; # Nerd Font RedHat
+          Android = "󰀲 "; # Nerd Font Android
+          Arch = "󰣇 "; # Nerd Font Arch
+          CentOS = "󰌠 "; # Nerd Font CentOS
+          Debian = "󰌠 "; # Nerd Font Debian
+          EndeavourOS = "󰣇 "; # Nerd Font Endeavour
+          Fedora = "󰣛 "; # Nerd Font Fedora
+          Illumos = "󰌠 "; # Nerd Font Solaris
+          Kali = "󰣗 "; # Nerd Font Kali
+          Linux = "󰌚 "; # Nerd Font Tux
+          Macos = "󰀵 "; # Nerd Font Apple
+          Manjaro = "󰣇 "; # Nerd Font Manjaro
+          Mariner = "󰌠 "; # Nerd Font Mariner
+          Mint = "󰣜 "; # Nerd Font Mint
+          NetBSD = "󰌠 "; # Nerd Font NetBSD
+          NixOS = "󰌠 "; # Nerd Font NixOS
+          OpenBSD = "󰌠 "; # Nerd Font OpenBSD
+          openEuler = "󰌠 "; # Nerd Font openEuler
+          openSUSE = "󰣝 "; # Nerd Font openSUSE
+          OracleLinux = "󰌠 "; # Nerd Font Oracle
+          Pop = "󰣞 "; # Nerd Font Pop_OS
+          Raspbian = "󰌠 "; # Nerd Font Raspberry Pi
+          Redhat = "󱄛 "; # Nerd Font RedHat
+          RedHatEnterprise = "󱄛 "; # Nerd Font RedHat
+          RockyLinux = "󰌠 "; # Nerd Font Rocky
+          Redox = "🧪 "; # Unicode test tube
+          Solus = "󰌠 "; # Nerd Font Solus
+          SUSE = "󰌠 "; # Nerd Font SUSE
+          Ubuntu = "󰌠 "; # Nerd Font Ubuntu
+          Ultramarine = "󰌠 "; # Nerd Font Ultramarine
+          Unknown = "󰌠 "; # Nerd Font Unknown
+          Void = "󰌠 "; # Nerd Font Void
+          Windows = "󰌠 "; # Nerd Font Windows
         };
       };
 
@@ -611,7 +643,7 @@
         format = "[$env_value]($style) ";
         variable = "STARSHIP_SESSION_KEY";
         default = "";
-        symbol = "";
+        symbol = "󰌠 "; # Nerd Font terminal icon
         disabled = false;
       };
 
@@ -624,13 +656,60 @@
       #   disabled = false;
       # };
 
-      # Shell module
+      # Shell module - enhanced with more shell support
       shell = {
         style = "bold cyan";
         format = "[$indicator]($style) ";
         fish_indicator = "󰈺 ";
         bash_indicator = "󰘳 ";
         zsh_indicator = "󰺧 ";
+        disabled = false;
+      };
+
+      # Custom modules for enhanced functionality
+      # Git worktree module - shows when in a git worktree
+      git_worktree = {
+        style = "bold blue";
+        format = "on [$symbol$path]($style) ";
+        symbol = "󰏗 ";
+        disabled = false;
+      };
+
+      # Git stash module - shows number of stashed changes
+      git_stash = {
+        style = "bold yellow";
+        format = "stashed [$symbol$count]($style) ";
+        symbol = "󰏗 ";
+        disabled = false;
+      };
+
+      # Git tag module - shows current tag
+      git_tag = {
+        style = "bold green";
+        format = "tagged [$symbol$tag]($style) ";
+        symbol = "󰓹 ";
+        disabled = false;
+      };
+
+      # Git ahead/behind module - shows commits ahead/behind
+      git_ahead_behind = {
+        style = "bold blue";
+        format = "([$ahead_count$behind_count]($style) )";
+        disabled = false;
+      };
+
+      # Line break module - enhanced for better visual separation
+      line_break = {
+        disabled = false;
+      };
+
+      # Custom modules for development workflow
+      # Conda environment module - enhanced for Python development
+      conda = {
+        style = "bold green";
+        format = "via [$symbol$environment]($style) ";
+        symbol = "󰌠 ";
+        ignore_base = true;
         disabled = false;
       };
     };

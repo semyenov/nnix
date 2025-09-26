@@ -94,22 +94,28 @@ nix search nixpkgs <package-name>
 
 ## Pre-installed Development Tools
 
-### IDE and Editors (via desktop profile)
+### IDE and Editors (via development profile)
 - **cursor-appimage**: Cursor editor AppImage
 - **claude-code**: Claude Code from unstable channel
-- **jetbrains.idea-community**: IntelliJ IDEA Community Edition
 - **postman**: API development platform
 - **neovim**: Default text editor
+- **helix**: Post-modern modal text editor
+- **zed**: High-performance code editor
 
-### Modern CLI Tools (via desktop profile)
+### Version Control (via development profile)
+- **Git tools**: gh, gitlab, gh-dash, gitu, gitui, lazygit, delta, difftastic, tig
+
+### Development Tools (via development profile)
+- **JavaScript/TypeScript**: bun (fast all-in-one runtime), fnm (Node.js version manager)
+- **Language managers**: pyenv (Python), rbenv (Ruby)
+- **Database clients**: postgresql, mariadb, redis, pgcli, mycli, litecli
+- **Debugging**: gdb, valgrind, hyperfine, strace, ltrace
+- **Documentation**: cheat, tealdeer
+- **Code analysis**: scc
+
+### System Administration (via terminal profile)
 - **Shell enhancements**: starship, direnv, atuin, mcfly, zellij
 - **File managers**: broot, xplr, ranger, mc
-- **Git tools**: gh-dash, gitu, lazygit, delta, difftastic, tig
-- **Database clients**: pgcli, litecli, mycli
-- **System info**: onefetch, scc, neofetch
-- **Data visualization**: visidata, silicon
-
-### System Administration (via sysadmin profile)
 - **Monitoring**: btop, htop, glances, procs, bandwhich
 - **Network**: nmap, tcpdump, mtr, dig, dog, trippy
 - **Containers**: lazydocker, dive, kubectl, k9s, helm
@@ -117,6 +123,8 @@ nix search nixpkgs <package-name>
 - **Cloud CLIs**: awscli2, google-cloud-sdk, azure-cli
 - **Text processing**: jq, yq, miller, sd
 - **File utilities**: lsd, eza, fd, ripgrep, bat, dust, duf
+- **System info**: onefetch, neofetch
+- **Data visualization**: visidata, silicon
 
 ## Architecture Overview
 
@@ -133,15 +141,12 @@ nix search nixpkgs <package-name>
 - **home/**: Home Manager user configurations
   - `users/`: User-specific configurations (semyenov.nix)
   - `profiles/`: Reusable home-manager profiles
-    - `cli.nix`: Modern CLI tools and shell enhancements
-    - `common.nix`: Common packages (gopass, nekoray)
-    - `development.nix`: IDEs, version control, databases
-    - `music.nix`: Music applications (tauon)
+    - `development.nix`: IDEs, version control, databases, Bun.js
     - `nix.nix`: Nix development tools (formatters, linters, LSP)
-    - `productivity.nix`: Browsers, office, media applications
+    - `productivity.nix`: Browsers, office, media applications, music, proxy tools
     - `shell.nix`: Fish shell configuration with modern aliases
-    - `sysadmin.nix`: System administration and monitoring tools
-    - `bun.nix`: Bun.js development profile for modern JavaScript/TypeScript development
+    - `starship.nix`: Starship prompt configuration
+    - `terminal.nix`: Modern CLI tools, system monitoring, infrastructure tools
 
 - **modules/**: System-level configuration modules (self-contained with sozdev options)
   - `core.nix`: Boot, networking, nix settings, shell aliases
@@ -155,6 +160,7 @@ nix search nixpkgs <package-name>
   - `security.nix`: Complete security hardening
   - `optimizations.nix`: System performance optimizations
   - `gaming.nix`: Gaming profile with Steam and performance tools
+  - `wifi-hotspot.nix`: WiFi hotspot configuration with network bridging
   - `default.nix`: Imports all modules with sensible defaults
 
 - **packages/**: Custom package definitions
@@ -214,8 +220,9 @@ nix search nixpkgs <package-name>
   - WSDD service for Windows network discovery
   - Gaming module enabled with Steam and performance tools
   - Docker with NVIDIA GPU support
-  - Bun.js development environment
+  - Bun.js integrated in development profile
   - Custom throne proxy utility package
+  - WiFi hotspot capability with network bridging
 
 ### Shell Aliases (Home Manager)
 Modern CLI tool replacements are aliased in Fish shell:
@@ -256,9 +263,10 @@ Quick commands:
 
 ### To modify user configuration:
 1. Edit `home/users/semyenov.nix` for user-specific settings
-2. Modify `home/profiles/productivity.nix` for desktop applications
-3. Modify `home/profiles/terminal.nix` for system tools
-4. Changes apply on next rebuild
+2. Modify `home/profiles/productivity.nix` for desktop applications and media
+3. Modify `home/profiles/terminal.nix` for CLI and system tools
+4. Modify `home/profiles/development.nix` for IDEs and dev tools
+5. Changes apply on next rebuild
 
 ### To use system modules:
 Modules are imported via `modules/default.nix` in `hosts/semyenov/configuration.nix`:
@@ -266,12 +274,15 @@ Modules are imported via `modules/default.nix` in `hosts/semyenov/configuration.
 - Toggle modules: `sozdev.<name>.enable = false;` in host configuration
 - Configure module options: `sozdev.<name>.<option> = value;`
 - Each module is self-contained with its own sozdev NixOS options
-- Active modules: core, users, audio, fonts, terminals, gnome, nvidia, docker, security, optimizations, gaming
+- Active modules: core, users, audio, fonts, terminals, gnome, nvidia, docker, security, optimizations, gaming, wifi-hotspot
 
 ### Claude Code Permissions
 This repository has pre-configured Claude Code permissions in `.claude/settings.local.json`:
-- **Auto-allowed commands**: nix flake operations, git operations, systemd utilities
+- **Auto-allowed commands**: nix flake operations, git operations, systemd utilities, awk, xargs
+- **Auto-allowed web domains**: www.cursor.com, github.com
+- **MCP servers**: nixos (for NixOS package/option search), context7 (for context management)
 - **Additional directory access**: `/home/semyenov/.config`
+- **Output style**: Explanatory (provides educational insights)
 - These permissions enable Claude Code to perform system administration tasks seamlessly
 
 ## Common Troubleshooting
