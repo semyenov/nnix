@@ -1,104 +1,117 @@
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
+{lib, ...}: {
   # Enhanced Starship prompt configuration
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
     settings = {
-      # Custom format with more information
+      # Optimized format with logical grouping and better organization
       format = lib.concatStrings [
+        # System info (top priority)
+        "$os"
         "$username"
         "$hostname"
         "$localip"
         "$shlvl"
+        "$container"
+
+        # Navigation and context
         "$directory"
+        "$nix_shell"
+        "$conda"
+        "$direnv"
+        "$env_var"
+
+        # Version control (most important for development)
         "$git_branch"
         "$git_commit"
         "$git_state"
         "$git_metrics"
         "$git_status"
         "$hg_branch"
+
+        # Development environment
         "$docker_context"
-        "$package"
+        "$kubernetes"
+        "$terraform"
+        "$aws"
+        "$gcloud"
+        "$azure"
+
+        # Programming languages (grouped by popularity)
+        "$nodejs"
+        "$python"
+        "$rust"
+        "$golang"
+        "$java"
         "$c"
         "$cmake"
-        "$cobol"
-        "$daml"
-        "$dart"
-        "$deno"
+        "$lua"
+        "$ruby"
+        "$php"
         "$dotnet"
+        "$dart"
+        "$swift"
+        "$kotlin"
+        "$scala"
+        "$haskell"
+        "$ocaml"
+        "$nim"
+        "$zig"
+        "$vlang"
+        "$crystal"
         "$elixir"
         "$elm"
         "$erlang"
         "$fennel"
         "$gleam"
-        "$golang"
-        "$guix_shell"
-        "$haskell"
         "$haxe"
         "$helm"
-        "$java"
         "$julia"
-        "$kotlin"
         "$gradle"
-        "$lua"
-        "$nim"
-        "$nodejs"
-        "$ocaml"
-        "$opa"
         "$perl"
-        "$php"
         "$pulumi"
         "$purescript"
-        "$python"
         "$quarto"
         "$raku"
         "$rlang"
         "$red"
-        "$ruby"
-        "$rust"
-        "$scala"
         "$solidity"
-        "$swift"
-        "$terraform"
         "$typst"
-        "$vlang"
         "$vagrant"
-        "$zig"
         "$buf"
-        "$nix_shell"
-        "$conda"
+        "$cobol"
+        "$daml"
+        "$deno"
+        "$guix_shell"
         "$meson"
         "$spack"
+
+        # Package management
+        "$package"
+
+        # System monitoring
         "$memory_usage"
-        "$aws"
-        "$gcloud"
-        "$openstack"
-        "$azure"
-        "$direnv"
-        "$env_var"
-        "$crystal"
-        "$custom"
-        "$sudo"
-        "$cmd_duration"
-        "$line_break"
-        "$jobs"
         "$battery"
-        "$time"
+
+        # Command execution
+        "$cmd_duration"
+        "$jobs"
+        "$sudo"
+
+        # Status and completion
         "$status"
-        "$os"
-        "$container"
-        "$shell"
+        "$time"
+        "$line_break"
         "$character"
       ];
 
       # Add a blank line at the start of the prompt
       add_newline = true;
+
+      # Performance optimizations
+      scan_timeout = 30;
+      command_timeout = 500;
+      right_format = ""; # Disable right prompt for better performance
 
       # Palette for consistent colors
       palette = "catppuccin_mocha";
@@ -132,11 +145,13 @@
         crust = "#11111b";
       };
 
-      # Character module - prompt symbol
+      # Character module - enhanced prompt symbols
       character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[➜](bold red)";
-        vicmd_symbol = "[⮜](bold yellow)";
+        success_symbol = "[❯](bold green)";
+        error_symbol = "[❯](bold red)";
+        vicmd_symbol = "[❮](bold yellow)";
+        format = "$symbol ";
+        disabled = false;
       };
 
       # Username module
@@ -151,13 +166,13 @@
       # Hostname module
       hostname = {
         ssh_only = false;
-        ssh_symbol = "🌐 ";
+        ssh_symbol = " ";
         format = "on [$ssh_symbol$hostname](bold green) ";
         trim_at = ".local";
         disabled = false;
       };
 
-      # Directory module with icons
+      # Directory module with enhanced icons and better functionality
       directory = {
         style = "bold lavender";
         format = "in [$path]($style)[$read_only]($read_only_style) ";
@@ -167,23 +182,35 @@
         read_only = " 󰌾";
         read_only_style = "red";
         home_symbol = "󰋜 ";
+        fish_style_pwd_dir_length = 1;
         substitutions = {
           "Documents" = "󰈙 ";
-          "Downloads" = " ";
+          "Downloads" = "󰈙 ";
           "Music" = "󰎈 ";
-          "Pictures" = " ";
+          "Pictures" = "󰈙 ";
           "Developer" = "󰲋 ";
           "Projects" = "󰏗 ";
-          ".config" = " ";
+          ".config" = "󰈙 ";
           "~" = "󰋜 ";
+          "nn" = "󰌠 ";
+          "home" = "󰋜 ";
+          "tmp" = "󰔷 ";
+          "var" = "󰀘 ";
+          "opt" = "󰏗 ";
+          "usr" = "󰗮 ";
+          "bin" = "󰘳 ";
+          "etc" = "󰙅 ";
+          "dev" = "󰋚 ";
+          "proc" = "󰌠 ";
+          "sys" = "󰒓 ";
         };
       };
 
-      # Git branch module
+      # Git branch module - enhanced with better symbols
       git_branch = {
-        symbol = "";
+        symbol = "󰘬 ";
         style = "bold mauve";
-        format = "on [$symbol $branch(:$remote_branch)]($style) ";
+        format = "on [$symbol$branch(:$remote_branch)]($style) ";
         truncation_length = 20;
         truncation_symbol = "…";
         always_show_remote = false;
@@ -191,7 +218,7 @@
         disabled = false;
       };
 
-      # Git status module with better symbols
+      # Git status module with enhanced symbols and better visibility
       git_status = {
         style = "bold red";
         format = "([\\[$all_status$ahead_behind\\]]($style) )";
@@ -204,9 +231,9 @@
         stashed = "󰏗";
         modified = "!";
         staged = "+";
-        renamed = "»";
+        renamed = ">";
         deleted = "✘";
-        typechanged = "";
+        typechanged = "󰉄";
         disabled = false;
       };
 
@@ -243,15 +270,15 @@
         only_nonzero_diffs = true;
       };
 
-      # Command duration module
+      # Command duration module - optimized for better UX
       cmd_duration = {
-        min_time = 2000; # Show if command took more than 2 seconds
+        min_time = 1000; # Show if command took more than 1 second
         style = "bold yellow";
         format = "took [$duration]($style) ";
         show_milliseconds = false;
         disabled = false;
         show_notifications = false;
-        min_time_to_notify = 45000;
+        min_time_to_notify = 30000; # Reduced notification threshold
       };
 
       # Package version module
@@ -264,16 +291,16 @@
         disabled = false;
       };
 
-      # Nix shell module
+      # Nix shell module - enhanced for better Nix development
       nix_shell = {
         style = "bold blue";
         format = "via [$symbol$state( \\($name\\))]($style) ";
-        symbol = "❄️ ";
+        symbol = "󰍭 ";
         impure_msg = "[impure](bold red)";
         pure_msg = "[pure](bold green)";
-        unknown_msg = "";
+        unknown_msg = "[unknown](bold yellow)";
         disabled = false;
-        heuristic = false;
+        heuristic = true; # Enable heuristic for better detection
       };
 
       # Docker context
@@ -301,11 +328,11 @@
       # Battery module
       battery = {
         format = "[$symbol$percentage]($style) ";
-        charging_symbol = "󰂄";
-        discharging_symbol = "󰂃";
-        empty_symbol = "󰂎";
-        full_symbol = "󰁹";
-        unknown_symbol = "󰂑";
+        charging_symbol = "";
+        discharging_symbol = "";
+        empty_symbol = "";
+        full_symbol = "";
+        unknown_symbol = "";
         display = [
           {
             threshold = 10;
@@ -328,13 +355,13 @@
         use_12hr = false;
       };
 
-      # Memory usage module
+      # Memory usage module - optimized for performance
       memory_usage = {
         style = "bold dimmed white";
         format = "via $symbol[$ram( | $swap)]($style) ";
         symbol = "󰍛 ";
-        threshold = 75;
-        disabled = true; # Enable for system monitoring
+        threshold = 85; # Only show when memory usage is high
+        disabled = true; # Disable by default for better performance
       };
 
       # Shell level module
@@ -347,7 +374,7 @@
         disabled = false;
       };
 
-      # Status module - show exit code
+      # Status module - enhanced error handling
       status = {
         style = "bold red";
         format = "[$symbol$status]($style) ";
@@ -358,9 +385,9 @@
         sigint_symbol = "🧱";
         signal_symbol = "⚡";
         map_symbol = false;
-        disabled = true; # Enable to see exit codes
+        disabled = false; # Enable for better error handling
         recognize_signal_code = true;
-        pipestatus = false;
+        pipestatus = true;
       };
 
       # Programming language modules with Nerd Font icons
@@ -456,58 +483,46 @@
         disabled = false;
       };
 
-      # OS module
+      # OS module - enhanced with NixOS detection
       os = {
         style = "bold white";
         format = "[$symbol]($style) ";
-        disabled = true; # Enable to show OS icon
+        disabled = false; # Enable to show OS icon
         symbols = {
-          Alpaquita = " ";
-          Alpine = " ";
-          AlmaLinux = " ";
-          Amazon = " ";
-          Android = " ";
-          Arch = " ";
-          Artix = " ";
-          CentOS = " ";
-          Debian = " ";
-          DragonFly = "🐉 ";
-          Emscripten = "🔗 ";
-          EndeavourOS = " ";
-          Fedora = " ";
-          FreeBSD = " ";
-          Garuda = "󰛓 ";
-          Gentoo = " ";
-          HardenedBSD = "󰒃 ";
-          Illumos = " ";
-          Kali = " ";
-          Linux = " ";
-          Mabox = "󰏖 ";
-          Macos = " ";
-          Manjaro = " ";
-          Mariner = " ";
-          MidnightBSD = " ";
-          Mint = " ";
-          NetBSD = " ";
-          NixOS = " ";
-          OpenBSD = " ";
-          OpenCloudOS = "☁️ ";
-          openEuler = " ";
-          openSUSE = " ";
-          OracleLinux = " ";
-          Pop = " ";
-          Raspbian = " ";
+          Alpine = "";
+          AlmaLinux = "";
+          Android = "";
+          Arch = "";
+          CentOS = "";
+          Debian = "";
+          EndeavourOS = "";
+          Fedora = "";
+          Illumos = "";
+          Kali = "";
+          Linux = "";
+          Macos = "";
+          Manjaro = "";
+          Mariner = "";
+          Mint = "";
+          NetBSD = "";
+          NixOS = "󰌠 ";
+          OpenBSD = "";
+          openEuler = "";
+          openSUSE = "";
+          OracleLinux = "";
+          Pop = "";
+          Raspbian = "";
           Redhat = "󱄛 ";
           RedHatEnterprise = "󱄛 ";
-          RockyLinux = " ";
+          RockyLinux = "";
           Redox = "🧪 ";
-          Solus = " ";
-          SUSE = " ";
-          Ubuntu = " ";
-          Ultramarine = " ";
-          Unknown = " ";
-          Void = " ";
-          Windows = " ";
+          Solus = "";
+          SUSE = "";
+          Ubuntu = "";
+          Ultramarine = "";
+          Unknown = "";
+          Void = "";
+          Windows = "";
         };
       };
 
@@ -577,17 +592,46 @@
         disabled = false;
       };
 
-      # Direnv module
+      # Direnv module - enhanced for better development workflow
       direnv = {
         style = "bold orange";
         format = "[$symbol$loaded/$allowed]($style) ";
         symbol = "󰌪 ";
-        disabled = true; # Enable if you want to see direnv status
+        disabled = false; # Enable for better development experience
         allowed_msg = "✓";
         not_allowed_msg = "✗";
         denied_msg = "⛔";
         loaded_msg = "●";
         unloaded_msg = "○";
+      };
+
+      # Environment variable module
+      env_var = {
+        style = "bold blue";
+        format = "[$env_value]($style) ";
+        variable = "STARSHIP_SESSION_KEY";
+        default = "";
+        symbol = "";
+        disabled = false;
+      };
+
+      # # Custom module for system info
+      # custom = {
+      #   command = "echo '󰌠'";
+      #   when = "test -f /etc/nixos/configuration.nix";
+      #   style = "bold blue";
+      #   format = "[$output]($style) ";
+      #   disabled = false;
+      # };
+
+      # Shell module
+      shell = {
+        style = "bold cyan";
+        format = "[$indicator]($style) ";
+        fish_indicator = "󰈺 ";
+        bash_indicator = "󰘳 ";
+        zsh_indicator = "󰺧 ";
+        disabled = false;
       };
     };
   };
