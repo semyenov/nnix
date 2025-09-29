@@ -11,15 +11,15 @@
     unstable.claude-code
     postman
     neovim
-    helix         # Post-modern modal text editor
-    zed
+    helix # Post-modern modal text editor
+    zed-editor
 
     # Version Control
     gh
     gitlab
     gh-dash
     gitu
-    gitui         # Blazing fast terminal-ui for Git
+    gitui # Blazing fast terminal-ui for Git
     lazygit
     delta
     difftastic
@@ -34,12 +34,12 @@
     litecli
 
     # JavaScript/TypeScript Development
-    unstable.bun  # Fast all-in-one JavaScript runtime & toolkit
-    fnm           # Fast and simple Node.js version manager
+    unstable.bun # Fast all-in-one JavaScript runtime & toolkit
+    fnm # Fast and simple Node.js version manager
 
     # Language Version Managers
-    pyenv         # Simple Python version management
-    rbenv         # Ruby version manager
+    pyenv # Simple Python version management
+    rbenv # Ruby version manager
 
     # Debugging & Profiling
     gdb

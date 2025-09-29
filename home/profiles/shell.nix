@@ -140,8 +140,8 @@
       nni = "nix profile install nixpkgs#$argv[1]";
       nnr = "nix profile remove $argv[1]";
       nnl = "nix profile list";
-      nnrb = "sudo nixos-rebuild switch --flake .#semyenov";
-      nnu = "nix flake update && sudo nixos-rebuild switch --flake .#semyenov";
+      nnrb = "sudo nixos-rebuild switch --flake .#$argv[1]";
+      nnu = "nix flake update && sudo nixos-rebuild switch --flake .#$argv[1]";
       nnc = "sudo nix-collect-garbage -d && sudo nix-store --optimise";
       nnroll = "sudo nixos-rebuild switch --rollback";
 

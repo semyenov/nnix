@@ -92,7 +92,6 @@
         # System monitoring
         "$memory_usage"
         "$battery"
-        "$disk"
 
         # Command execution
         "$cmd_duration"
@@ -101,7 +100,6 @@
 
         # Status and completion
         "$status"
-        "$time"
         "$line_break"
         "$character"
       ];
@@ -194,12 +192,12 @@
           "Videos" = "󰈙 ";
           "Developer" = "󰲋 ";
           "Projects" = "󰏗 ";
-          "Code" = "󰌠 ";
-          "src" = "󰌠 ";
+          "Code" = "💻 ";
+          "src" = "📁 ";
           ".config" = "󰈙 ";
           ".local" = "󰋜 ";
           "~" = "󰋜 ";
-          "nn" = "󰌠 ";
+          "nn" = "❄️ "; # NixOS snowflake
           "home" = "󰋜 ";
           "tmp" = "󰔷 ";
           "var" = "󰀘 ";
@@ -208,18 +206,18 @@
           "bin" = "󰘳 ";
           "etc" = "󰙅 ";
           "dev" = "󰋚 ";
-          "proc" = "󰌠 ";
+          "proc" = "⚙️ ";
           "sys" = "󰒓 ";
           "mnt" = "󰋚 ";
           "media" = "󰋚 ";
           "srv" = "󰏗 ";
-          "run" = "󰌠 ";
+          "run" = "🏃 ";
           "lib" = "󰘳 ";
           "lib64" = "󰘳 ";
           "sbin" = "󰘳 ";
-          "root" = "󰌠 ";
-          "nix" = "󰌠 ";
-          "nixos" = "󰌠 ";
+          "root" = "👑 ";
+          "nix" = "❄️ ";
+          "nixos" = "❄️ ";
         };
       };
 
@@ -252,9 +250,6 @@
         deleted = "✘";
         typechanged = "󰉄";
         disabled = false;
-        # Enhanced configuration for better UX
-        show_untracked = true;
-        show_stashed = true;
       };
 
       # Git commit module
@@ -321,9 +316,6 @@
         unknown_msg = "[unknown](bold yellow)";
         disabled = false;
         heuristic = true; # Enable heuristic for better detection
-        # Enhanced NixOS integration
-        detect_files = ["flake.nix" "shell.nix" "default.nix"];
-        detect_folders = [".nix-shell"];
       };
 
       # Docker context
@@ -385,15 +377,6 @@
         symbol = "󰍛 ";
         threshold = 85; # Only show when memory usage is high
         disabled = true; # Disable by default for better performance
-      };
-
-      # Disk usage module - new addition for system monitoring
-      disk = {
-        style = "bold yellow";
-        format = "on [$symbol$path]($style) ";
-        symbol = "󰋊 ";
-        threshold = 90; # Only show when disk usage is high
-        disabled = true; # Enable if you want disk monitoring
       };
 
       # Shell level module
@@ -467,7 +450,7 @@
       java = {
         style = "bold red";
         format = "via [$symbol($version )]($style)";
-        symbol = "󰌠 "; # Nerd Font Java icon
+        symbol = "☕ "; # Java coffee icon
         detect_extensions = ["java" "class" "jar" "gradle" "clj" "cljc"];
         detect_files = ["pom.xml" "build.gradle.kts" "build.sbt" ".java-version" ".deps.edn" "project.clj" "build.boot" ".sdkmanrc"];
         detect_folders = [];
@@ -522,10 +505,10 @@
         disabled = false; # Enable to show OS icon
         symbols = {
           Alpine = "󰒳 "; # Nerd Font Alpine
-          AlmaLinux = "󰌠 "; # Nerd Font RedHat
+          AlmaLinux = "󱄛 "; # Nerd Font RedHat
           Android = "󰀲 "; # Nerd Font Android
           Arch = "󰣇 "; # Nerd Font Arch
-          CentOS = "󰌠 "; # Nerd Font CentOS
+          CentOS = "󱄛 "; # Nerd Font CentOS
           Debian = "󰌠 "; # Nerd Font Debian
           EndeavourOS = "󰣇 "; # Nerd Font Endeavour
           Fedora = "󰣛 "; # Nerd Font Fedora
@@ -632,7 +615,7 @@
         disabled = false; # Enable for better development experience
         allowed_msg = "✓";
         not_allowed_msg = "✗";
-        denied_msg = "⛔";
+        denied_msg = "󰅤";
         loaded_msg = "●";
         unloaded_msg = "○";
       };
@@ -643,7 +626,7 @@
         format = "[$env_value]($style) ";
         variable = "STARSHIP_SESSION_KEY";
         default = "";
-        symbol = "󰌠 "; # Nerd Font terminal icon
+        symbol = "⚙️ "; # Environment variable icon
         disabled = false;
       };
 
@@ -666,38 +649,6 @@
         disabled = false;
       };
 
-      # Custom modules for enhanced functionality
-      # Git worktree module - shows when in a git worktree
-      git_worktree = {
-        style = "bold blue";
-        format = "on [$symbol$path]($style) ";
-        symbol = "󰏗 ";
-        disabled = false;
-      };
-
-      # Git stash module - shows number of stashed changes
-      git_stash = {
-        style = "bold yellow";
-        format = "stashed [$symbol$count]($style) ";
-        symbol = "󰏗 ";
-        disabled = false;
-      };
-
-      # Git tag module - shows current tag
-      git_tag = {
-        style = "bold green";
-        format = "tagged [$symbol$tag]($style) ";
-        symbol = "󰓹 ";
-        disabled = false;
-      };
-
-      # Git ahead/behind module - shows commits ahead/behind
-      git_ahead_behind = {
-        style = "bold blue";
-        format = "([$ahead_count$behind_count]($style) )";
-        disabled = false;
-      };
-
       # Line break module - enhanced for better visual separation
       line_break = {
         disabled = false;
@@ -708,7 +659,7 @@
       conda = {
         style = "bold green";
         format = "via [$symbol$environment]($style) ";
-        symbol = "󰌠 ";
+        symbol = "🐍 "; # Python conda icon
         ignore_base = true;
         disabled = false;
       };
