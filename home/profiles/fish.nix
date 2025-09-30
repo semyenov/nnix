@@ -1,4 +1,10 @@
-{...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  # Fish shell configuration
   programs.fish = {
     enable = true;
 
@@ -16,6 +22,9 @@
       if command -v zoxide >/dev/null
         zoxide init fish | source
       end
+
+      # Initialize Starship prompt
+      starship init fish | source
     '';
 
     shellAliases = {
@@ -116,12 +125,30 @@
       funfsp = "sudo";
     };
 
-    # Useful Fish functions with prefixes
     functions = {
       # File operations (f-)
       fmkcd = "mkdir -p $argv[1] && cd $argv[1]";
-      fextract = "if test -f $argv[1]; switch (string match -r '.*\.(.*)' $argv[1]) case '*.tar.bz2'; tar xjf $argv[1]; case '*.tar.gz'; tar xzf $argv[1]; case '*.bz2'; bunzip2 $argv[1]; case '*.rar'; unrar x $argv[1]; case '*.gz'; gunzip $argv[1]; case '*.tar'; tar xf $argv[1]; case '*.tbz2'; tar xjf $argv[1]; case '*.tgz'; tar xzf $argv[1]; case '*.zip'; unzip $argv[1]; case '*.Z'; uncompress $argv[1]; case '*.7z'; 7z x $argv[1]; case '*'; echo 'Cannot extract $argv[1]'; end; else; echo 'File $argv[1] not found'; end";
-      fbackup = "cp -r $argv[1] $argv[1].backup.$(date +%Y%m%d_%H%M%S)";
+      fextract = ''
+        if test -f $argv[1]
+          switch (string match -r '.*\\.(.*)' $argv[1])
+            case '*.tar.bz2'; tar xjf $argv[1]
+            case '*.tar.gz'; tar xzf $argv[1]
+            case '*.bz2'; bunzip2 $argv[1]
+            case '*.rar'; unrar x $argv[1]
+            case '*.gz'; gunzip $argv[1]
+            case '*.tar'; tar xf $argv[1]
+            case '*.tbz2'; tar xjf $argv[1]
+            case '*.tgz'; tar xzf $argv[1]
+            case '*.zip'; unzip $argv[1]
+            case '*.Z'; uncompress $argv[1]
+            case '*.7z'; 7z x $argv[1]
+            case '*'; echo 'Cannot extract $argv[1]'
+          end
+        else
+          echo 'File $argv[1] not found'
+        end
+      '';
+      fbackup = "cp -r $argv[1] $argv[1].backup.(date +%Y%m%d_%H%M%S)";
       fsize = "du -sh $argv[1]";
       fcount = "find $argv[1] -type f | wc -l";
 
@@ -166,5 +193,18 @@
       funpass = "openssl rand -base64 32";
       funuuid = "uuidgen | tr '[:upper:]' '[:lower:]'";
     };
+  };
+
+  # Direnv integration
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
+  # Session variables (user-specific)
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "brave";
+    TERMINAL = "ghostty";
   };
 }

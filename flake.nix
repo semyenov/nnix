@@ -166,43 +166,13 @@
       ];
 
       shellHook = ''
-        # Enhanced shell hook
-        echo "🚀 NixOS Development Shell"
-        echo "=========================="
-        echo "Available commands:"
-        echo "  rebuild     - Rebuild and switch NixOS configuration"
-        echo "  update      - Update flake inputs"
-        echo "  check       - Check flake validity"
-        echo "  clean       - Clean Nix store"
-        echo "  generations - Show system generations"
-        echo ""
-        echo "Development tools:"
-        echo "  nix-tree    - Visualize dependency tree"
-        echo "  nix-du      - Analyze disk usage"
-        echo "  statix      - Lint Nix code"
-        echo "  deadnix     - Find unused code"
-        echo "  alejandra   - Format Nix code"
-        echo ""
-
-        # Set up environment
-        export NIX_CONFIG="experimental-features = nix-command flakes"
-
-        # Enhanced aliases
-        alias rebuild="sudo nixos-rebuild switch --flake .#semyenov"
-        alias update="nix flake update"
-        alias check="nix flake check"
-        alias clean="sudo nix-collect-garbage -d"
-        alias generations="sudo nix-env --list-generations --profile /nix/var/nix/profiles/system"
-        alias nix-tree="nix-tree"
-        alias nix-du="nix-du"
-        alias format="alejandra ."
-        alias lint="statix ."
-        alias unused="deadnix ."
-
         # Fun startup
         if command -v neofetch >/dev/null 2>&1; then
           neofetch --ascii_distro nixos
         fi
+
+        # Set up environment
+        export NIX_CONFIG="experimental-features = nix-command flakes"
       '';
     };
 

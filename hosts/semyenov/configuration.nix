@@ -19,9 +19,13 @@
   sozdev.core.timeZone = "Europe/Moscow";
   sozdev.core.locale = "en_US.UTF-8";
 
-  # Set domain to make the FQDN "semyenov"
-  networking.domain = "local";
+  # Enable NVIDIA GPU support
+  sozdev.nvidia.enable = true;
+  sozdev.nvidia.prime.enable = true;
+  sozdev.nvidia.prime.intelBusId = "PCI:0:2:0";
+  sozdev.nvidia.prime.nvidiaBusId = "PCI:1:0:0";
 
+  # Enable Docker
   sozdev.docker.enable = true;
   sozdev.docker.enableOnBoot = true;
   sozdev.docker.enableNvidia = true;
@@ -29,11 +33,14 @@
   sozdev.docker.dockerComposePackage = pkgs.docker-compose;
   sozdev.docker.users = ["semyenov"];
 
+  # Enable gaming
   sozdev.gaming.enable = true;
 
   # Additional system packages
   environment.systemPackages = with pkgs; [
     wsdd # Windows Service Discovery Daemon for network browsing
+    gopass
+    gopass-jsonapi
   ];
 
   # Enable WSDD service for Windows network discovery
@@ -43,45 +50,30 @@
     interface = "eno1"; # Your network interface
   };
 
-  # BlueTooth configuration
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-    settings = {
-      General = {
-        Enable = "Source,Sink,Media,Socket";
-        Experimental = true;
-      };
-    };
-  };
-
-  # Enable blueman for Bluetooth GUI management
-  services.blueman.enable = true;
-
   # Host-specific passwordless sudo for system management
   security.sudo.extraRules = [
     {
-      users = [ "semyenov" ];
+      users = ["semyenov"];
       commands = [
         {
           command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = [ "NOPASSWD" "NOSETENV" ];
+          options = ["NOPASSWD" "NOSETENV"];
         }
         {
           command = "/run/current-system/sw/bin/nix-collect-garbage";
-          options = [ "NOPASSWD" "NOSETENV" ];
+          options = ["NOPASSWD" "NOSETENV"];
         }
         {
           command = "/run/current-system/sw/bin/systemctl";
-          options = [ "NOPASSWD" "NOSETENV" ];
+          options = ["NOPASSWD" "NOSETENV"];
         }
         {
           command = "/run/current-system/sw/bin/nix-env";
-          options = [ "NOPASSWD" "NOSETENV" ];
+          options = ["NOPASSWD" "NOSETENV"];
         }
         {
           command = "/run/current-system/sw/bin/nix-store";
-          options = [ "NOPASSWD" "NOSETENV" ];
+          options = ["NOPASSWD" "NOSETENV"];
         }
       ];
     }

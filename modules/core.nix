@@ -49,6 +49,7 @@ in {
     # Networking
     networking = {
       hostName = cfg.hostName;
+      domain = "local";
       firewall.enable = true;
       networkmanager.enable = true;
     };

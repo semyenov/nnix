@@ -5,14 +5,12 @@ with lib; {
     ./users.nix
     ./audio.nix
     ./fonts.nix
-    ./terminals.nix
     ./gnome.nix
     ./nvidia.nix
     ./docker.nix
     ./security.nix
     ./optimizations.nix
     ./gaming.nix
-    ./wifi-hotspot.nix
   ];
 
   # Default sozdev configurations
@@ -21,13 +19,11 @@ with lib; {
     users.enable = mkDefault true;
     audio.enable = mkDefault true;
     fonts.enable = mkDefault true;
-    terminals.enable = mkDefault true;
     gnome.enable = mkDefault true;
-    nvidia.enable = mkDefault true;
+    nvidia.enable = mkDefault false;
     docker.enable = mkDefault true;
     security.enable = mkDefault true;
     optimizations.enable = mkDefault true;
     gaming.enable = mkDefault false;
-    wifi-hotspot.enable = mkDefault false;
   };
 }

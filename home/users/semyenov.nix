@@ -7,7 +7,7 @@
 }: {
   imports = [
     ../profiles/terminal.nix
-    ../profiles/shell.nix
+    ../profiles/fish.nix
     ../profiles/starship.nix
     ../profiles/nix.nix
     ../profiles/development.nix

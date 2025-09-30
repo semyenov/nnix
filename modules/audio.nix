@@ -1,16 +1,17 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
   cfg = config.sozdev.audio;
 in {
   options.sozdev.audio = {
-    enable = mkEnableOption "Audio support with PipeWire" // {
-      default = true;
-    };
+    enable =
+      mkEnableOption "Audio support with PipeWire"
+      // {
+        default = true;
+      };
 
     enableJack = mkOption {
       type = types.bool;

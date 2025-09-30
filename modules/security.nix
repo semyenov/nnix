@@ -218,8 +218,6 @@ in {
 
     # Security packages
     environment.systemPackages = with pkgs; [
-      gopass
-      gopass-jsonapi
       aide
       chkrootkit
       lynis

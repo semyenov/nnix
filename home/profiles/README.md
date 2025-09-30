@@ -28,8 +28,7 @@ Modern command-line tools and shell enhancements.
 - **Fun**: cowsay, lolcat, cmatrix
 
 **Configuration:**
-- Sets environment variables (EDITOR, BROWSER, TERMINAL)
-- Enables direnv with nix-direnv integration
+- Environment variables and direnv integration are now handled by `modules/terminals.nix`.
 
 ### Common Packages (`common.nix`)
 Common packages used across the system.
@@ -46,14 +45,8 @@ Nix-specific development tools.
 - **Linters**: statix, deadnix
 - **Language Servers**: nil, nixd
 
-### Shell Configuration (`shell.nix`)
-Fish shell configuration with modern aliases.
-
-**Includes:**
-- **Shell**: Fish shell with configuration
-- **Aliases**: Modern CLI tool replacements (ls→lsd, cat→bat, etc.)
-- **Git Shortcuts**: g, gg, lg
-- **NixOS Helpers**: rebuild, update, clean, generations
+### Shell Configuration
+Fish shell configuration and aliases are now provided by the system module `modules/terminals.nix`.
 
 ### Music Applications (`music.nix`)
 Music-related applications.
@@ -146,7 +139,6 @@ Import profiles in your user configuration:
     ../profiles/cli.nix
     ../profiles/common.nix
     ../profiles/nix.nix
-    ../profiles/shell.nix
     ../profiles/music.nix
     ../profiles/sysadmin.nix
     ../profiles/development.nix
@@ -172,7 +164,7 @@ Import only the profiles you need:
     ../profiles/cli.nix     # Always useful
     ../profiles/common.nix  # Common packages
     ../profiles/nix.nix     # Nix development tools
-    ../profiles/shell.nix   # Fish shell and aliases
+    # Fish shell and aliases are provided by system module `modules/terminals.nix`
     ../profiles/development.nix   # For developers
     # ../profiles/music.nix        # Music applications
     # ../profiles/productivity.nix  # Skip if using different apps

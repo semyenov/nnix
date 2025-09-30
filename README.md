@@ -18,27 +18,25 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 
 ```
 .
-├── flake.nix                 # Main flake entry point
-├── flake.lock               # Lock file for reproducible builds
-├── hosts/                   # Host-specific configurations
-│   └── semyenov/           # This host configuration
+├── flake.nix                          # Main flake entry point   
+├── flake.lock                         # Lock file for reproducible builds
+├── hosts/                             # Host-specific configurations
+│   └── semyenov/                      # This host configuration
 │       ├── configuration.nix # Host config (imports modules)
 │       └── hardware-configuration.nix # Hardware-specific settings
 ├── home/                   # Home-manager configurations
 │   ├── users/             # User-specific configurations
 │   │   └── semyenov.nix  # User configuration
 │   └── profiles/          # Reusable home-manager profiles
-│       ├── terminal.nix   # Modern CLI tools and system administration
 │       ├── development.nix # Development tools and Bun.js runtime
 │       ├── productivity.nix # Office, media, music, and proxy tools
-│       ├── shell.nix      # Fish shell and aliases
 │       └── nix.nix        # Nix development tools
 ├── modules/              # System-level configuration modules
 │   ├── core.nix          # Boot, networking, nix settings
 │   ├── users.nix         # User account management
 │   ├── audio.nix         # PipeWire audio configuration
 │   ├── fonts.nix         # Font packages and settings
-│   ├── terminals.nix     # Terminal emulators
+│   ├── terminals.nix     # Terminal emulators, CLI tools, Fish config, aliases, direnv
 │   ├── gnome.nix         # GNOME desktop environment
 │   ├── nvidia.nix        # NVIDIA GPU drivers with PRIME
 │   ├── docker.nix        # Docker container runtime
@@ -118,11 +116,11 @@ Available modules:
 ### Home-Manager Profiles
 
 User profiles are in `home/profiles/`:
-- **terminal**: Modern CLI tools, system monitoring, networking, security, and infrastructure tools
 - **development**: IDEs, version control, databases, and Bun.js JavaScript runtime
 - **productivity**: Browsers, office suite, media apps, music applications, and proxy tools
-- **shell**: Fish shell configuration with modern aliases
 - **nix**: Nix development tools (formatters, linters, LSP)
+
+Note: Terminal tooling and Fish configuration previously provided by `terminal.nix` and `shell.nix` have been consolidated into the system module `modules/terminals.nix`.
 
 ## Common Commands
 
