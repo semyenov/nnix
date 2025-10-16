@@ -1,0 +1,62 @@
+version: '3'
+
+vars:
+  HOST:
+    sh: 'hostname -s'
+  USERNAME:
+    sh: 'whoami'
+  PROJECT_NAME:
+    sh: 'basename $(pwd)'
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  check:
+    desc: Run 'nix flake check' for this flake
+    preconditions:
+      - test -f flake.nix
+    cmds:
+      - nix flake check
+
+  build-system:
+    desc: Build NixOS system for HOST={{.HOST}}
+    preconditions:
+      - test -f flake.nix
+    cmds:
+      - nixos-rebuild build --flake .#{{.HOST}}
+
+  switch-system:
+    desc: Switch NixOS system for HOST={{.HOST}} (uses sudo)
+    preconditions:
+      - test -f flake.nix
+    cmds:
+      - sudo nixos-rebuild switch --flake .#{{.HOST}}
+
+  build-home:
+    desc: Build home-manager profile for {{.USERNAME}}@{{.HOST}}
+    preconditions:
+      - test -f flake.nix
+    cmds:
+      - home-manager build --flake .#{{.USERNAME}}@{{.HOST}}
+
+  switch-home:
+    desc: Switch home-manager profile for {{.USERNAME}}@{{.HOST}}
+    preconditions:
+      - test -f flake.nix
+    cmds:
+      - home-manager switch --flake .#{{.USERNAME}}@{{.HOST}}
+
+  build:
+    desc: Alias to build-system
+    cmds:
+      - task: build-system
+
+  switch:
+    desc: Switch system then home-manager
+    cmds:
+      - task: switch-system
+      - task: switch-home

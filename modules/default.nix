@@ -11,6 +11,7 @@ with lib; {
     ./security.nix
     ./optimizations.nix
     ./gaming.nix
+    ./mkcert.nix
   ];
 
   # Default sozdev configurations
@@ -20,6 +21,7 @@ with lib; {
     audio.enable = mkDefault true;
     fonts.enable = mkDefault true;
     gnome.enable = mkDefault true;
+    mkcert.enable = mkDefault true;
     nvidia.enable = mkDefault false;
     docker.enable = mkDefault true;
     security.enable = mkDefault true;

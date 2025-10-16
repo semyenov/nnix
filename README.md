@@ -30,13 +30,15 @@ A modern, modular NixOS configuration using Nix Flakes with a clean domain-based
 │   └── profiles/          # Reusable home-manager profiles
 │       ├── development.nix # Development tools and Bun.js runtime
 │       ├── productivity.nix # Office, media, music, and proxy tools
-│       └── nix.nix        # Nix development tools
+│       ├── nix.nix        # Nix development tools
+│       ├── terminal.nix   # Modern CLI tools and utilities
+│       ├── fish.nix       # Fish shell configuration
+│       └── omf.nix        # Fish plugins (Tide prompt, fzf, bang-bang)
 ├── modules/              # System-level configuration modules
 │   ├── core.nix          # Boot, networking, nix settings
 │   ├── users.nix         # User account management
 │   ├── audio.nix         # PipeWire audio configuration
 │   ├── fonts.nix         # Font packages and settings
-│   ├── terminals.nix     # Terminal emulators, CLI tools, Fish config, aliases, direnv
 │   ├── gnome.nix         # GNOME desktop environment
 │   ├── nvidia.nix        # NVIDIA GPU drivers with PRIME
 │   ├── docker.nix        # Docker container runtime
@@ -119,8 +121,9 @@ User profiles are in `home/profiles/`:
 - **development**: IDEs, version control, databases, and Bun.js JavaScript runtime
 - **productivity**: Browsers, office suite, media apps, music applications, and proxy tools
 - **nix**: Nix development tools (formatters, linters, LSP)
-
-Note: Terminal tooling and Fish configuration previously provided by `terminal.nix` and `shell.nix` have been consolidated into the system module `modules/terminals.nix`.
+- **terminal**: Modern CLI tools, system monitoring utilities
+- **fish**: Fish shell configuration with modern aliases
+- **omf**: Fish plugins including Tide prompt theme, fzf integration, and bang-bang
 
 ## Common Commands
 

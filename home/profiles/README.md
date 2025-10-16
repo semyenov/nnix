@@ -4,56 +4,6 @@ This directory contains reusable Home Manager profiles for user environment conf
 
 ## Available Profiles
 
-### CLI Tools (`cli.nix`)
-Modern command-line tools and shell enhancements.
-
-**Includes:**
-- **Shell Enhancements**: starship, direnv, atuin, mcfly, zellij, navi, vivid
-- **Modern CLI Replacements**:
-  - `lsd`, `eza` - Modern ls alternatives
-  - `fd` - Modern find
-  - `ripgrep` - Fast grep
-  - `bat` - Cat with syntax highlighting
-  - `dust` - Visual disk usage
-  - `duf` - Better df
-  - `procs`, `btop`, `bottom` - Process viewers
-  - `dog` - Modern DNS client
-  - `sd` - Intuitive sed alternative
-  - `miller` - CSV/JSON processor
-- **File Managers**: broot, xplr, ranger, mc, ncdu, dua
-- **Terminal Utilities**: tmux, screen, mosh, asciinema, expect
-- **Data Processing**: jq, yq, visidata, silicon
-- **System Info**: neofetch, onefetch, hardware info tools
-- **Archives**: p7zip, unrar, zip, unzip
-- **Fun**: cowsay, lolcat, cmatrix
-
-**Configuration:**
-- Environment variables and direnv integration are now handled by `modules/terminals.nix`.
-
-### Common Packages (`common.nix`)
-Common packages used across the system.
-
-**Includes:**
-- **Password Management**: gopass, gopass-jsonapi
-- **Network Tools**: nekoray (proxy client)
-
-### Nix Development (`nix.nix`)
-Nix-specific development tools.
-
-**Includes:**
-- **Formatters**: nixpkgs-fmt, alejandra
-- **Linters**: statix, deadnix
-- **Language Servers**: nil, nixd
-
-### Shell Configuration
-Fish shell configuration and aliases are now provided by the system module `modules/terminals.nix`.
-
-### Music Applications (`music.nix`)
-Music-related applications.
-
-**Includes:**
-- **Players**: tauon (from unstable channel)
-
 ### Development (`development.nix`)
 Development tools and IDEs.
 
@@ -61,13 +11,16 @@ Development tools and IDEs.
 - **IDEs and Editors**:
   - Cursor (AppImage)
   - Claude Code (from unstable)
-  - IntelliJ IDEA Community
-  - Postman
-  - Neovim
+  - Postman (API development)
+  - Neovim (default editor)
+  - Helix (post-modern modal editor)
+  - Zed (high-performance editor)
 - **Version Control**:
   - GitHub CLI (gh), GitLab CLI
-  - Git UIs: gh-dash, gitu, lazygit
+  - Git UIs: gh-dash, gitu, gitui, lazygit
   - Diff tools: delta, difftastic, tig
+- **JavaScript/TypeScript**: Bun.js (fast all-in-one runtime), fnm (Node.js version manager)
+- **Language Managers**: pyenv (Python), rbenv (Ruby)
 - **Database Clients**:
   - PostgreSQL, MariaDB, Redis
   - Interactive clients: pgcli, mycli, litecli
@@ -75,7 +28,7 @@ Development tools and IDEs.
   - gdb, valgrind, hyperfine
   - strace, ltrace
 - **Documentation**: cheat, tealdeer (tldr)
-- **Code Analysis**: scc (code counter), onefetch (git info)
+- **Code Analysis**: scc (code counter)
 
 ### Productivity (`productivity.nix`)
 Office, communication, and media applications.
@@ -85,38 +38,87 @@ Office, communication, and media applications.
 - **Browsers**: Brave, Chromium
 - **Office & Documentation**: Obsidian, LibreOffice
 - **Media**:
-  - Players: VLC, Spotify, Yandex Music
+  - Players: VLC, Spotify, Yandex Music, Tauon
   - Editors: GIMP, Inkscape
   - Recording: OBS Studio
 - **System Utilities**: dconf, GNOME Tweaks
+- **Proxy Tools**: Throne (custom proxy utility)
 
-### System Administration (`sysadmin.nix`)
-Tools for system administration and DevOps.
+### Terminal (`terminal.nix`)
+Modern command-line tools and shell enhancements.
 
 **Includes:**
-- **Monitoring**:
-  - htop, iotop-c, nethogs, iftop, bmon
-  - glances, sysstat, lsof
-  - bandwhich, trippy
-- **Network Tools**:
-  - nmap, tcpdump, mtr, traceroute
-  - dig, whois, netcat, socat, iperf3
-- **Security Tools**:
-  - lynis, aide, chkrootkit
-  - age, sops, pass, pwgen, gnupg
-- **Container Management**:
-  - lazydocker, dive
-  - kubectl, k9s, helm
-- **Infrastructure as Code**:
-  - terraform, ansible, vault
-- **Cloud CLIs**:
-  - AWS CLI v2
-  - Google Cloud SDK
-  - Azure CLI
-- **Backup Tools**:
-  - restic, borgbackup
-  - rclone, rsync
-- **Log Analysis**: lnav, multitail
+- **Shell Enhancements**: atuin, mcfly, zellij, navi, vivid
+- **Modern CLI Replacements**:
+  - `lsd`, `eza` - Modern ls alternatives
+  - `fd` - Modern find
+  - `ripgrep` - Fast grep
+  - `bat` - Cat with syntax highlighting
+  - `dust` - Visual disk usage
+  - `duf` - Better df
+  - `procs`, `btop`, `htop`, `glances` - Process viewers
+  - `dog` - Modern DNS client
+  - `sd` - Intuitive sed alternative
+  - `miller` - CSV/JSON processor
+  - `jq`, `yq` - JSON/YAML processors
+- **File Managers**: broot, xplr, ranger, mc
+- **System Info**: neofetch, onefetch
+- **Network Tools**: mtr, nmap, tcpdump, bandwhich, trippy
+- **Container Tools**: lazydocker, dive, kubectl, k9s, helm
+- **Infrastructure Tools**: terraform, ansible, vault
+- **Cloud CLIs**: AWS CLI v2, Google Cloud SDK, Azure CLI
+- **Data Visualization**: visidata, silicon
+
+### Fish Shell (`fish.nix`)
+Fish shell configuration with modern aliases.
+
+**Features:**
+- Fish shell enabled by default
+- Modern CLI tool aliases:
+  - `ls`, `ll`, `la` → `lsd`
+  - `cat` → `bat`
+  - `grep` → `rg` (ripgrep)
+  - `find` → `fd`
+  - `sed` → `sd`
+  - `du` → `dust`
+  - `df` → `duf`
+  - `ps` → `procs`
+  - `top`/`htop` → `btm` (bottom)
+  - `dig` → `dog`
+- Git shortcuts:
+  - `g` → `git`
+  - `gg` → `gitu`
+  - `lg` → `lazygit`
+- NixOS shortcuts:
+  - `rebuild` → `sudo nixos-rebuild switch --flake .#semyenov`
+  - `update` → `nix flake update`
+  - `clean` → `sudo nix-collect-garbage -d`
+  - `generations` → Lists system generations
+- Zoxide integration for smart directory navigation
+
+### OMF - Oh My Fish Plugins (`omf.nix`)
+Fish plugins managed via Nix (avoiding Oh My Fish framework conflicts).
+
+**Includes:**
+- **Tide**: Ultimate Fish prompt theme
+  - Double-line prompt with git information
+  - Customizable via `tide configure` command
+  - Shows current directory, git status, command duration
+- **Bang-bang**: Bash-style history substitution (!!, !$)
+- **Fzf-fish**: Fuzzy finder integration for:
+  - Command history search
+  - File and directory search
+  - Process killing
+  - Git operations
+
+### Nix Development (`nix.nix`)
+Nix-specific development tools.
+
+**Includes:**
+- **Formatters**: nixpkgs-fmt, alejandra
+- **Linters**: statix, deadnix
+- **Language Servers**: nil
+- **Development shell integration**
 
 ## Usage
 
@@ -126,21 +128,12 @@ Import profiles in your user configuration:
 
 ```nix
 # home/users/semyenov.nix
-{ config, pkgs, lib, inputs, ... }:
-
-{
-  home = {
-    username = "semyenov";
-    homeDirectory = "/home/semyenov";
-    stateVersion = "25.05";
-  };
-
+{...}: {
   imports = [
-    ../profiles/cli.nix
-    ../profiles/common.nix
+    ../profiles/terminal.nix
+    ../profiles/fish.nix
+    ../profiles/omf.nix
     ../profiles/nix.nix
-    ../profiles/music.nix
-    ../profiles/sysadmin.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
   ];
@@ -148,8 +141,8 @@ Import profiles in your user configuration:
   # Additional user-specific configuration
   programs.git = {
     enable = true;
-    userName = "Alexander Semyenov";
-    userEmail = "semyenov@hotmail.com";
+    userName = "Your Name";
+    userEmail = "your@email.com";
   };
 }
 ```
@@ -161,14 +154,12 @@ Import only the profiles you need:
 ```nix
 {
   imports = [
-    ../profiles/cli.nix     # Always useful
-    ../profiles/common.nix  # Common packages
-    ../profiles/nix.nix     # Nix development tools
-    # Fish shell and aliases are provided by system module `modules/terminals.nix`
-    ../profiles/development.nix   # For developers
-    # ../profiles/music.nix        # Music applications
-    # ../profiles/productivity.nix  # Skip if using different apps
-    # ../profiles/sysadmin.nix      # Only for system administrators
+    ../profiles/fish.nix        # Fish shell with aliases
+    ../profiles/omf.nix         # Fish plugins and Tide prompt
+    ../profiles/terminal.nix   # CLI tools
+    ../profiles/nix.nix        # Nix development
+    # ../profiles/development.nix  # Skip if not developing
+    # ../profiles/productivity.nix # Skip if using different apps
   ];
 }
 ```
@@ -220,7 +211,7 @@ When adding packages to profiles:
 
 ## Environment Variables
 
-Common environment variables are set in `cli.nix`:
+Common environment variables are set via home-manager:
 
 ```nix
 home.sessionVariables = {
@@ -239,10 +230,75 @@ home.sessionVariables = {
 };
 ```
 
+## Fish Shell Customization
+
+### Tide Prompt Configuration
+
+The Tide prompt can be customized interactively:
+
+```bash
+tide configure
+```
+
+This will walk you through various options for:
+- Prompt style (lean, classic, rainbow)
+- Icon set (with or without icons)
+- Color scheme
+- Prompt components
+
+### Adding Custom Aliases
+
+Add custom aliases to `fish.nix`:
+
+```nix
+programs.fish.shellAliases = {
+  # Existing aliases...
+  myalias = "my-command";
+};
+```
+
+### Fish Plugins
+
+Additional Fish plugins can be added in `omf.nix`:
+
+```nix
+home.packages = with pkgs.fishPlugins; [
+  tide
+  bang-bang
+  fzf-fish
+  # Add more plugins here
+  autopair  # Auto-complete brackets
+  done      # Notifications when long processes complete
+];
+```
+
 ## Tips
 
-1. **Start minimal**: Begin with `cli.nix` and add more as needed
+1. **Start minimal**: Begin with `fish.nix` and `omf.nix` for a good shell experience
 2. **Review packages**: Periodically review installed packages and remove unused ones
 3. **Custom configs**: Add program-specific configurations in user files
 4. **Dotfiles**: Use `home.file` to manage dotfiles declaratively
 5. **Test changes**: Use `home-manager switch` to test without system rebuild
+
+## Troubleshooting
+
+### Fish Plugins Not Loading
+
+If Fish plugins aren't loading:
+1. Ensure both `fish.nix` and `omf.nix` are imported
+2. Restart your shell or run `exec fish`
+3. Check plugin installation with `ls ~/.config/fish/conf.d/`
+
+### Tide Prompt Not Showing
+
+If Tide prompt isn't displaying:
+1. Run `tide configure` to initialize
+2. Check if the prompt is set: `echo $tide_prompt_add_newline_before`
+3. Ensure terminal supports required fonts/icons
+
+### Alias Conflicts
+
+If aliases conflict with existing commands:
+1. Use `command <name>` to bypass alias
+2. Remove conflicting alias from `fish.nix`
+3. Create custom alias with different name

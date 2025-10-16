@@ -17,7 +17,8 @@
     vlc
     spotify
     obs-studio
-    unstable.tauon # Music player
+    tauon # Music player
+    unstable.cassette # Music player
 
     # Proxy Tools
     throne

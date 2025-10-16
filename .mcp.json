@@ -8,7 +8,7 @@
       "command": "npx",
       "args": ["-y", "@context7/mcp-server"],
       "env": {
-        "CONTEXT7_API_KEY": "ctx7sk-cacc39a0-d3c0-452c-aaeb-af0c55f1fb04",
+        "CONTEXT7_API_KEY": "ctx7sk-7a1ddc3e-7f2d-4370-88fe-0ff157fd8f5c",
         "CONTEXT7_API_URL": "https://context7.com/api/v1"
       }
     }

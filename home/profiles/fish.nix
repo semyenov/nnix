@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{...}: {
   # Fish shell configuration
   programs.fish = {
     enable = true;
@@ -22,9 +17,6 @@
       if command -v zoxide >/dev/null
         zoxide init fish | source
       end
-
-      # Initialize Starship prompt
-      starship init fish | source
     '';
 
     shellAliases = {

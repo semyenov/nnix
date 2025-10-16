@@ -38,8 +38,9 @@ in {
         "transparent_hugepage=madvise"
       ];
 
-      # Use latest kernel for better hardware support
-      kernelPackages = pkgs.linuxPackages_latest;
+      # Use kernel 6.16 for NVIDIA driver compatibility
+      # Note: linuxPackages_latest (6.17) breaks NVIDIA production drivers
+      kernelPackages = pkgs.linuxPackages_6_12_hardened;
 
       # Reduce kernel log verbosity
       consoleLogLevel = 3;
@@ -66,7 +67,7 @@ in {
 
         # Network optimizations
         "net.core.default_qdisc" = "cake";
-        "net.ipv4.tcp_congestion" = "cubic"; # Changed from bbr (not available)
+        "net.ipv4.tcp_congestion_control" = "cubic"; # Changed from bbr (not available)
         "net.ipv4.tcp_fastopen" = 3;
         "net.ipv4.tcp_mtu_probing" = 1;
 

@@ -1,14 +1,8 @@
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
+{...}: {
   imports = [
     ../profiles/terminal.nix
     ../profiles/fish.nix
-    ../profiles/starship.nix
+    ../profiles/omf.nix
     ../profiles/nix.nix
     ../profiles/development.nix
     ../profiles/productivity.nix
@@ -18,6 +12,11 @@
     username = "semyenov";
     homeDirectory = "/home/semyenov";
     stateVersion = "25.05";
+
+    # Environment variables for Chromium-based browsers to use NixOS SUID sandbox
+    sessionVariables = {
+      CHROME_DEVEL_SANDBOX = "/run/wrappers/bin/__chromium-suid-sandbox";
+    };
   };
 
   programs.home-manager.enable = true;

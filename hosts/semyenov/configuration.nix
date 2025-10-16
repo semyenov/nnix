@@ -36,11 +36,28 @@
   # Enable gaming
   sozdev.gaming.enable = true;
 
+  # Enable Chromium security wrappers for Brave and other Chromium-based browsers
+  programs.chromium = {
+    enable = true;
+    extensions = []; # No pre-installed extensions
+  };
+
+  # Enable unprivileged user namespaces for Chromium sandboxing
+  # This allows Chromium-based browsers to use namespace sandboxing without SUID
+  security.chromiumSuidSandbox.enable = true;
+
+  # Enable unprivileged user namespaces for modern browser sandboxing
+  # Required for Chromium-based browsers (Brave, Chrome, etc.) to run with proper sandboxing
+  # This is the modern, preferred sandboxing method and is required when using hardened kernels
+  boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
+
   # Additional system packages
   environment.systemPackages = with pkgs; [
     wsdd # Windows Service Discovery Daemon for network browsing
     gopass
     gopass-jsonapi
+    google-chrome
+    mlocate
   ];
 
   # Enable WSDD service for Windows network discovery

@@ -144,8 +144,8 @@ nix search nixpkgs <package-name>
     - `development.nix`: IDEs, version control, databases, Bun.js
     - `nix.nix`: Nix development tools (formatters, linters, LSP)
     - `productivity.nix`: Browsers, office, media applications, music, proxy tools
-    - `shell.nix`: Fish shell configuration with modern aliases
-    - `starship.nix`: Starship prompt configuration
+    - `fish.nix`: Fish shell configuration with modern aliases
+    - `omf.nix`: Fish plugins management (Tide prompt, fzf, bang-bang)
     - `terminal.nix`: Modern CLI tools, system monitoring, infrastructure tools
 
 - **modules/**: System-level configuration modules (self-contained with sozdev options)
@@ -153,14 +153,12 @@ nix search nixpkgs <package-name>
   - `users.nix`: User account management
   - `audio.nix`: PipeWire audio configuration
   - `fonts.nix`: Font packages and configuration
-  - `terminals.nix`: Terminal emulators (alacritty, kitty, ghostty)
   - `gnome.nix`: GNOME desktop environment
   - `nvidia.nix`: NVIDIA GPU drivers with PRIME support
   - `docker.nix`: Docker container runtime with all options
   - `security.nix`: Complete security hardening
   - `optimizations.nix`: System performance optimizations
   - `gaming.nix`: Gaming profile with Steam and performance tools
-  - `wifi-hotspot.nix`: WiFi hotspot configuration with network bridging
   - `default.nix`: Imports all modules with sensible defaults
 
 - **packages/**: Custom package definitions
@@ -205,7 +203,7 @@ nix search nixpkgs <package-name>
 - **Time Zone**: Europe/Moscow
 - **Locale**: en_US.UTF-8
 - **Network Domain**: semyenov.local
-- **Shell**: Fish with starship prompt (configured in home profiles)
+- **Shell**: Fish with Tide prompt (configured via omf.nix profile)
 - **Editor**: Neovim as default (EDITOR=nvim)
 - **Browser**: Brave (BROWSER=brave)
 - **Terminal**: Ghostty (TERMINAL=ghostty)
@@ -222,7 +220,7 @@ nix search nixpkgs <package-name>
   - Docker with NVIDIA GPU support
   - Bun.js integrated in development profile
   - Custom throne proxy utility package
-  - WiFi hotspot capability with network bridging
+  - Fish shell with Tide prompt theme via Fish plugins
 
 ### Shell Aliases (Home Manager)
 Modern CLI tool replacements are aliased in Fish shell:
@@ -266,7 +264,9 @@ Quick commands:
 2. Modify `home/profiles/productivity.nix` for desktop applications and media
 3. Modify `home/profiles/terminal.nix` for CLI and system tools
 4. Modify `home/profiles/development.nix` for IDEs and dev tools
-5. Changes apply on next rebuild
+5. Modify `home/profiles/fish.nix` for shell configuration and aliases
+6. Modify `home/profiles/omf.nix` for Fish plugins and prompt
+7. Changes apply on next rebuild
 
 ### To use system modules:
 Modules are imported via `modules/default.nix` in `hosts/semyenov/configuration.nix`:
@@ -274,7 +274,7 @@ Modules are imported via `modules/default.nix` in `hosts/semyenov/configuration.
 - Toggle modules: `sozdev.<name>.enable = false;` in host configuration
 - Configure module options: `sozdev.<name>.<option> = value;`
 - Each module is self-contained with its own sozdev NixOS options
-- Active modules: core, users, audio, fonts, terminals, gnome, nvidia, docker, security, optimizations, gaming, wifi-hotspot
+- Active modules: core, users, audio, fonts, gnome, nvidia, docker, security, optimizations, gaming
 
 ### Claude Code Permissions
 This repository has pre-configured Claude Code permissions in `.claude/settings.local.json`:

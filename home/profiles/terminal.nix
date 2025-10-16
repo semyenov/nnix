@@ -8,8 +8,7 @@
     ++ (
       # Terminal-related user packages
       with pkgs; [
-        # Shell enhancements
-        starship
+        # Shell enhancements (starship removed - using Tide theme via omf.nix)
         atuin
         mcfly
         zellij
@@ -18,6 +17,7 @@
         zoxide
         fzf
         skim
+        go-task
 
         # Modern CLI replacements
         lsd

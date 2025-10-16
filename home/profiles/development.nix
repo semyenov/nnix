@@ -32,6 +32,7 @@
     pgcli
     mycli
     litecli
+    yaak
 
     # JavaScript/TypeScript Development
     unstable.bun # Fast all-in-one JavaScript runtime & toolkit
