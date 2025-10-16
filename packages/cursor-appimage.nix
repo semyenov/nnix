@@ -1,26 +1,22 @@
 {pkgs}: let
   pname = "cursor";
-  version = "1.7.44";
+  version = "1.7.46";
 
   src = pkgs.fetchurl {
-    url = "https://downloads.cursor.com/production/9d178a4a5589981b62546448bb32920a8219a5de/linux/x64/Cursor-${version}-x86_64.AppImage";
-    sha256 = "fde2dbebe102c459a9ce0b512207ced8f3e7dbc9056c0dd79aaf198cfac34398";
-  };
-
-  # Extract AppImage contents
-  appimageContents = pkgs.appimageTools.extract {
-    inherit pname version src;
+    url = "https://downloads.cursor.com/production/b9e5948c1ad20443a5cecba6b84a3c9b99d62582/linux/x64/deb/amd64/deb/cursor_${version}_amd64.deb";
+    sha256 = "0b41kcmr0migi6niqrppq42avf3lnddiv76762427dswz7ji3dhx";
   };
 in
   pkgs.stdenv.mkDerivation {
     inherit pname version;
 
-    src = appimageContents;
+    src = src;
 
     nativeBuildInputs = [
       pkgs.makeWrapper
       pkgs.copyDesktopItems
       pkgs.autoPatchelfHook
+      pkgs.dpkg
     ];
 
     buildInputs = [
@@ -67,8 +63,10 @@ in
       # Create directories
       mkdir -p $out/bin $out/share/cursor $out/share/applications $out/share/icons/hicolor/512x512/apps
 
-      # Copy application files
-      cp -r $src/usr/share/cursor/* $out/share/cursor/
+      # Extract deb and copy application files
+      extract_dir=$(mktemp -d)
+      dpkg-deb -x ${src} "$extract_dir"
+      cp -r "$extract_dir"/usr/share/cursor/* $out/share/cursor/
 
       # Create wrapper script
       makeWrapper $out/share/cursor/cursor $out/bin/cursor \
@@ -85,6 +83,7 @@ in
         pkgs.xorg.libXrandr
         pkgs.xorg.libxcb
         pkgs.xorg.libxkbfile
+        pkgs.google-chrome
         pkgs.libxkbcommon
         pkgs.wayland
         pkgs.fontconfig
@@ -114,8 +113,8 @@ in
         --add-flags "--disable-dev-shm-usage"
 
       # Install desktop file
-      if [ -f $src/cursor.desktop ]; then
-        cp $src/cursor.desktop $out/share/applications/
+      if [ -f "$extract_dir"/usr/share/applications/cursor.desktop ]; then
+        cp "$extract_dir"/usr/share/applications/cursor.desktop $out/share/applications/
         substituteInPlace $out/share/applications/cursor.desktop \
           --replace 'Exec=AppRun' 'Exec=cursor' \
           --replace 'Icon=cursor' 'Icon=cursor'
@@ -123,10 +122,10 @@ in
       fi
 
       # Install icon
-      if [ -f $src/co.anysphere.cursor.png ]; then
-        cp $src/co.anysphere.cursor.png $out/share/icons/hicolor/512x512/apps/cursor.png
-      elif [ -f $src/code.png ]; then
-        cp $src/code.png $out/share/icons/hicolor/512x512/apps/cursor.png
+      if [ -f "$extract_dir"/usr/share/icons/hicolor/512x512/apps/co.anysphere.cursor.png ]; then
+        cp "$extract_dir"/usr/share/icons/hicolor/512x512/apps/co.anysphere.cursor.png $out/share/icons/hicolor/512x512/apps/cursor.png
+      elif [ -f "$extract_dir"/usr/share/pixmaps/code.png ]; then
+        cp "$extract_dir"/usr/share/pixmaps/code.png $out/share/icons/hicolor/512x512/apps/cursor.png
       fi
 
       runHook postInstall
