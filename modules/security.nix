@@ -106,9 +106,9 @@ in {
         "kernel.yama.ptrace_scope" = 1;
         "kernel.randomize_va_space" = 2;
         # io_uring control (0=enabled, 1=disabled for unprivileged, 2=fully disabled)
-        # Enabled for applications like Ghostty that require io_uring for async I/O
-        # Note: On some hardened kernels, this parameter may be locked at boot
-        "kernel.io_uring_disabled" = 0;
+        # Note: On hardened kernels, this parameter is locked at boot to value 1
+        # Applications like Ghostty can still use io_uring with appropriate privileges
+        # "kernel.io_uring_disabled" = 0; # Disabled - locked on hardened kernels
         "net.ipv4.tcp_rfc1337" = 1;
         "net.ipv4.tcp_max_syn_backlog" = 4096;
         "net.ipv4.tcp_synack_retries" = 3;

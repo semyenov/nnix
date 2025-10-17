@@ -12,11 +12,14 @@ in
 
     src = src;
 
+    # Don't automatically unpack - we handle extraction manually in installPhase
+    dontUnpack = true;
+
     nativeBuildInputs = [
       pkgs.makeWrapper
       pkgs.copyDesktopItems
       pkgs.autoPatchelfHook
-      pkgs.dpkg
+      pkgs.binutils
     ];
 
     buildInputs = [
@@ -57,6 +60,21 @@ in
       pkgs.pango
     ];
 
+    desktopItems = [
+      (pkgs.makeDesktopItem {
+        name = "cursor";
+        desktopName = "Cursor";
+        comment = "AI-powered code editor";
+        exec = "cursor %F";
+        icon = "cursor";
+        startupNotify = true;
+        startupWMClass = "Cursor";
+        categories = ["Development" "TextEditor" "IDE"];
+        mimeTypes = ["text/plain" "inode/directory"];
+        keywords = ["cursor" "code" "editor" "ide" "vscode"];
+      })
+    ];
+
     installPhase = ''
       runHook preInstall
 
@@ -65,7 +83,21 @@ in
 
       # Extract deb and copy application files
       extract_dir=$(mktemp -d)
-      dpkg-deb -x ${src} "$extract_dir"
+
+      # Extract .deb archive manually to avoid permission issues with setuid binaries
+      ar x ${src} --output="$extract_dir"
+
+      # Extract the data archive (can be data.tar.xz, data.tar.gz, or data.tar.zst)
+      cd "$extract_dir"
+      if [ -f data.tar.xz ]; then
+        tar xf data.tar.xz --no-same-owner --no-same-permissions
+      elif [ -f data.tar.gz ]; then
+        tar xzf data.tar.gz --no-same-owner --no-same-permissions
+      elif [ -f data.tar.zst ]; then
+        tar xf data.tar.zst --no-same-owner --no-same-permissions
+      fi
+      cd -
+
       cp -r "$extract_dir"/usr/share/cursor/* $out/share/cursor/
 
       # Create wrapper script
@@ -112,20 +144,20 @@ in
         --add-flags "--disable-gpu-sandbox" \
         --add-flags "--disable-dev-shm-usage"
 
-      # Install desktop file
-      if [ -f "$extract_dir"/usr/share/applications/cursor.desktop ]; then
-        cp "$extract_dir"/usr/share/applications/cursor.desktop $out/share/applications/
-        substituteInPlace $out/share/applications/cursor.desktop \
-          --replace 'Exec=AppRun' 'Exec=cursor' \
-          --replace 'Icon=cursor' 'Icon=cursor'
-        sed -i -E 's|^Icon=.*|Icon=cursor|' $out/share/applications/cursor.desktop
-      fi
+      # Install desktop files using copyDesktopItems
+      copyDesktopItems
 
       # Install icon
       if [ -f "$extract_dir"/usr/share/icons/hicolor/512x512/apps/co.anysphere.cursor.png ]; then
         cp "$extract_dir"/usr/share/icons/hicolor/512x512/apps/co.anysphere.cursor.png $out/share/icons/hicolor/512x512/apps/cursor.png
       elif [ -f "$extract_dir"/usr/share/pixmaps/code.png ]; then
         cp "$extract_dir"/usr/share/pixmaps/code.png $out/share/icons/hicolor/512x512/apps/cursor.png
+      else
+        # Fallback: create a symlink to ensure icon is available
+        mkdir -p $out/share/icons/hicolor/512x512/apps
+        if [ -f "$extract_dir"/usr/share/cursor/resources/app/resources/linux/code.png ]; then
+          cp "$extract_dir"/usr/share/cursor/resources/app/resources/linux/code.png $out/share/icons/hicolor/512x512/apps/cursor.png
+        fi
       fi
 
       runHook postInstall
